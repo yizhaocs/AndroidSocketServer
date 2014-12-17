@@ -4,21 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import com.example.androidsocketsserver.AndroidSocketsClient.SocketsClient;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 public class AndroidSocketsServer extends Activity {
@@ -30,37 +23,29 @@ public class AndroidSocketsServer extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_android_sockets_server);
 		textView1 = (TextView) this.findViewById(R.id.textView1);
-
+		textView1.setMovementMethod(new ScrollingMovementMethod());
 		recievedText1 = (TextView) this.findViewById(R.id.recievedText1);
 
-		SocketsServer mSocketsServer = new SocketsServer(getApplicationContext(), textView1, recievedText1);
+		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 
 	}
+	
+	protected void updateDisplay(String message) {
+		textView1.append(message + "\n");
+	}
 
-	public static class SocketsServer extends AsyncTask {
-		private Context context;
-		private TextView subTextView1;
-		private TextView subRecievedText1;
-
-		public SocketsServer(Context context, TextView textView1, TextView recievedText1) {
-			this.context = context;
-			this.subTextView1 = textView1;
-			this.subRecievedText1 = recievedText1;
-
-		}
+	public class MyTask extends AsyncTask<String,String,String> {
+		@Override
+		protected void onPreExecute() {
+			// super.onPreExecute();
+			updateDisplay("Starting task");
+		};
 
 		@SuppressWarnings("resource")
-		protected String doInBackground(Object... params) {
+		protected String doInBackground(String... params) {
 
 			try {
-				try {
-					subTextView1.setText(String.valueOf(InetAddress.getLocalHost().getLocalHost()));
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 				/*
 				 * The server program begins by creating a new ServerSocket
 				 * object to listen on a specific port (see the statement in
@@ -68,9 +53,9 @@ public class AndroidSocketsServer extends Activity {
 				 * server, choose a port that is not already dedicated to some
 				 * other service.
 				 */
-				Log.d("heihei", "1233");
+	
 				ServerSocket serverSocket = new ServerSocket(4444);
-				Log.d("heihei", "1234");
+			
 				/*
 				 * If the server successfully binds to its port, then the
 				 * ServerSocket object is successfully created and the server
@@ -101,18 +86,15 @@ public class AndroidSocketsServer extends Activity {
 				 * socket with simple conversation.
 				 */
 				SingleClientRequest_SocketServerProtocol kkp = new SingleClientRequest_SocketServerProtocol();
-				outputLine = kkp.processInput(null);
-				out.println(outputLine);
+				out.println("Successfully Connected to Socket Server");
 
 				/*
 				 * Communicates with the client by reading from and writing to
 				 * the socket (the while loop).
 				 */
 				while ((inputLine = in.readLine()) != null) {
-
-					outputLine = kkp.processInput(inputLine);
-					out.println(outputLine);
-					if (outputLine.equals("Bye.")) {
+					out.println("server recieved: " + inputLine);
+					if (inputLine.equals("bye")) {
 						break;
 					}
 				}
@@ -120,8 +102,20 @@ public class AndroidSocketsServer extends Activity {
 				System.out.println("Exception caught when trying to listen on port " + 4444 + " or listening for a connection");
 				System.out.println(e.getMessage());
 			}
-			return null;
+			return "Task complete";
 		}
-
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			// super.onPostExecute(result);
+			updateDisplay(result);
+		}
+		
+		@Override
+		protected void onProgressUpdate(String... values) {
+			// TODO Auto-generated method stub
+			// super.onProgressUpdate(values);
+			updateDisplay(values[0]);
+		}
 	}
 }

@@ -4,24 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.example.androidsocketsserver.AndroidSocketsServer.SocketsServer;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class AndroidSocketsClient extends Activity {
 	private Button buttonSocketsClient1;
@@ -39,22 +30,24 @@ public class AndroidSocketsClient extends Activity {
 
 			}
 		});
-		SocketsClient mSocketsClient = new SocketsClient(getApplicationContext());
+		MyTask mSocketsClient = new MyTask();
 		mSocketsClient.execute();
 	}
 
-	public static class SocketsClient extends AsyncTask {
-		private Context context;
+	
+	
+	public static class MyTask extends AsyncTask<String, String, String> {
 		private String hostName = "10.97.1.83";
 		private int portNumber = 4444;
 
-		public SocketsClient(Context context) {
-			this.context = context;
-
-		}
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		};
 
 		@SuppressWarnings("resource")
-		protected String doInBackground(Object... params) {
+		@Override
+		protected String doInBackground(String... params) {
 			try {
 				Socket kkSocket = new Socket(hostName, portNumber);
 				PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
@@ -84,5 +77,16 @@ public class AndroidSocketsClient extends Activity {
 			return null;
 		}
 
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+		
+		@Override
+		protected void onProgressUpdate(String... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
 	}
 }
