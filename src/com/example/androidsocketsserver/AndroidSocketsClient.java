@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,6 +42,13 @@ public class AndroidSocketsClient extends Activity {
 
 	protected void updateDisplay(String message) {
 		clientMessage.append(message + "\n");
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		MyTask mSocketsClient = new MyTask();
+		mSocketsClient.execute();
+		return super.onTouchEvent(event);
 	}
 	
 	public class MyTask extends AsyncTask<String, String, String> {
