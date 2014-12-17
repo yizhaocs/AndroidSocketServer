@@ -6,17 +6,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.TextView;
 
 public class AndroidSocketsServer extends Activity {
 	private TextView textView1;
-	private TextView recievedText1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class AndroidSocketsServer extends Activity {
 		setContentView(R.layout.activity_android_sockets_server);
 		textView1 = (TextView) this.findViewById(R.id.textView1);
 		textView1.setMovementMethod(new ScrollingMovementMethod());
-		recievedText1 = (TextView) this.findViewById(R.id.recievedText1);
+	
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
@@ -44,7 +44,7 @@ public class AndroidSocketsServer extends Activity {
 
 		@SuppressWarnings("resource")
 		protected String doInBackground(String... params) {
-
+			List<String> recievedMessages = new ArrayList<String>();
 			try {
 				/*
 				 * The server program begins by creating a new ServerSocket
@@ -79,7 +79,7 @@ public class AndroidSocketsServer extends Activity {
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-				String inputLine, outputLine;
+				String inputLine;
 
 				/*
 				 * Initiates communication with the client by writing to the
@@ -93,6 +93,8 @@ public class AndroidSocketsServer extends Activity {
 				 * the socket (the while loop).
 				 */
 				while ((inputLine = in.readLine()) != null) {
+					recievedMessages.add(inputLine);
+					publishProgress(inputLine);
 					out.println("server recieved: " + inputLine);
 					if (inputLine.equals("bye")) {
 						break;
