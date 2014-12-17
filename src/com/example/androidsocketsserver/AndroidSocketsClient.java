@@ -63,18 +63,18 @@ public class AndroidSocketsClient extends Activity {
 				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 				String fromServer;
 				String fromUser;
-
-				while ((fromServer = in.readLine()) != null) {
-					System.out.println("Server: " + fromServer);
-					if (fromServer.equals("Bye."))
-						break;
-
-					fromUser = stdIn.readLine();
-					if (fromUser != null) {
-						System.out.println("Client: " + fromUser);
-						out.println(fromUser);
-					}
-				}
+				out.println("test");
+//				while ((fromServer = in.readLine()) != null) {
+//					publishProgress("Server: " + fromServer);
+//					if (fromServer.equals("Bye."))
+//						break;
+//
+//					fromUser = "test";
+//					if (fromUser != null) {
+//						publishProgress("Client: " + fromUser);
+//						out.println("test");
+//					}
+//				}
 			} catch (UnknownHostException e) {
 				System.err.println("Don't know about host " + hostName);
 				System.exit(1);
