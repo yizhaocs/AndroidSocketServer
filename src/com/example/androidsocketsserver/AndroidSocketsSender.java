@@ -44,7 +44,8 @@ public class AndroidSocketsSender extends Activity {
 	}
 
 	protected void updateDisplay(String message) {
-		clientMessage.append(message + "\n");
+		// clientMessage.append(message + "\n");
+		//clientMessage.append(message);
 	}
 
 
@@ -59,7 +60,7 @@ public class AndroidSocketsSender extends Activity {
 	}
 
 	public class MyTask extends AsyncTask<String, String, String> {
-		private String hostName = "10.97.1.32";
+		private String hostName = "10.97.1.98";
 		private int portNumber = 4444;
 
 		@Override

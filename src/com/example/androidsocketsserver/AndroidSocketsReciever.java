@@ -73,7 +73,8 @@ public class AndroidSocketsReciever extends Activity {
 	}
 	
 	protected void updateDisplay(String message) {
-		textView1.append(message + "\n");
+		// textView1.append(message + "\n");
+		textView1.append(message);
 	}
 
 	public class MyTask extends AsyncTask<String,String,String> {
