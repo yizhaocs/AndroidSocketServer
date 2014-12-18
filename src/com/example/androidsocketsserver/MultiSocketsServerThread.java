@@ -5,24 +5,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import org.json.JSONArray;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.MotionEvent.PointerCoords;
-import android.view.MotionEvent.PointerProperties;
 
 public class MultiSocketsServerThread extends Thread {
 	private Socket socket = null;
-
 	public MultiSocketsServerThread(Socket socket) {
 		super("KKMultiServerThread");
 		this.socket = socket;
 	}
 
+	@SuppressLint("NewApi")
 	public void run() {
 
 		try {
@@ -36,7 +35,16 @@ public class MultiSocketsServerThread extends Thread {
 			while ((inputLine = in.readLine()) != null) {
 				JSONObject jo = new JSONObject(inputLine);
 				MotionEvent me = ConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
+				PointerCoords outPointerCoords = new PointerCoords();
+				me.getPointerCoords(0, outPointerCoords);
 				Log.d("haha", me.toString());
+				Log.d("hahax", String.valueOf(outPointerCoords.x));
+				Log.d("hahay", String.valueOf(outPointerCoords.y));
+				View v = ViewTraversal.getView(outPointerCoords.x,outPointerCoords.y,AndroidSocketsReciever.viewsList);
+				//Log.d("hahaID", String.valueOf(v.getId()));
+				if(me!=null && v!=null)
+				v.dispatchTouchEvent(me);
+				
 				// out.println("echo " + inputLine);
 				if (inputLine.equals("Bye")) {
 					break;

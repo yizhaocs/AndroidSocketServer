@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme" >
         
          <activity
-            android:name=".AndroidSocketsClient"
+            android:name=".AndroidSocketsSender"
             android:label="@string/app_name" >
          <!--  <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
          
        
         <activity
-            android:name=".AndroidSocketsServer"
+            android:name=".AndroidSocketsReciever"
             android:label="@string/app_name" >
             ç<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
