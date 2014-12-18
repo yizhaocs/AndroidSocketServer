@@ -17,7 +17,8 @@ import android.view.MotionEvent.PointerCoords;
 public class MultiSocketsServerThread extends Thread {
 	private Socket socket = null;
 	private List<View> viewsList;
-	public MultiSocketsServerThread(Socket socket,List<View> viewsList) {
+
+	public MultiSocketsServerThread(Socket socket, List<View> viewsList) {
 		super("KKMultiServerThread");
 		this.socket = socket;
 		this.viewsList = viewsList;
@@ -27,12 +28,12 @@ public class MultiSocketsServerThread extends Thread {
 	public void run() {
 
 		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			// PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			String inputLine;
 
-			out.println("connection is setup between server and client");
+			// out.println("connection is setup between server and client");
 
 			while ((inputLine = in.readLine()) != null) {
 				JSONObject jo = new JSONObject(inputLine);
@@ -42,12 +43,14 @@ public class MultiSocketsServerThread extends Thread {
 				Log.d("haha", me.toString());
 				Log.d("hahax", String.valueOf(outPointerCoords.x));
 				Log.d("hahay", String.valueOf(outPointerCoords.y));
-				
-				View v = ViewTraversal.getView(outPointerCoords.x,outPointerCoords.y,viewsList);
-				//Log.d("hahaID", String.valueOf(v.getId()));
-				if(me!=null && v!=null)
-				v.dispatchTouchEvent(me);
-				
+
+				View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+				// Log.d("hahaID", String.valueOf(v.getId()));
+				if (me != null && v != null) {
+					Log.d("haha", "dispatchTouchEvent");
+					v.dispatchTouchEvent(me);
+				}
+
 				// out.println("echo " + inputLine);
 				if (inputLine.equals("Bye")) {
 					break;
@@ -55,12 +58,12 @@ public class MultiSocketsServerThread extends Thread {
 			}
 			socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e("error", "IOException:" + e.getMessage());
+		
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("error", "JSONException:" + e.getMessage());
+	
 		}
 	}
 
-	
 }

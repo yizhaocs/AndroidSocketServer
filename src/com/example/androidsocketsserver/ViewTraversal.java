@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 public class ViewTraversal {
 	public static List<View> travasalViews(View rootView) {
 		List<View> res = new ArrayList<View>();
+		res.add(rootView);
 		recursion(rootView, res);
 		return res;
 	}

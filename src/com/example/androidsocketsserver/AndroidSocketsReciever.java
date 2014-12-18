@@ -10,15 +10,19 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class AndroidSocketsReciever extends Activity {
 	private TextView textView1;
 	static List<View> viewsList;
+	Button button1;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,17 +30,26 @@ public class AndroidSocketsReciever extends Activity {
 		textView1 = (TextView) this.findViewById(R.id.textView1);
 		textView1.setMovementMethod(new ScrollingMovementMethod());
 		viewsList = new ArrayList<View>();
-		ViewTraversal.recursion(this.findViewById(R.id.recieverContent),viewsList);
+		ViewTraversal.recursion(this.findViewById(R.id.recieverContent), viewsList);
 		// Initialize the TextView for vertical scrolling
 		textView1.setOnClickListener(mCorkyListener);
 		textView1.setOnLongClickListener(mOnLongClickListener);
+		button1 = (Button) this.findViewById(R.id.button1);
+		button1.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				updateDisplay("ButtonClicked");
+
+			}
+		});
+
+	
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
-		
 
 	}
-	
+
 	// Create an anonymous implementation of OnClickListener
 	private OnClickListener mCorkyListener = new OnClickListener() {
 		public void onClick(View v) {
@@ -71,13 +84,13 @@ public class AndroidSocketsReciever extends Activity {
 		updateDisplay("3");
 		return super.onGenericMotionEvent(event);
 	}
-	
+
 	protected void updateDisplay(String message) {
 		// textView1.append(message + "\n");
 		textView1.append(message);
 	}
 
-	public class MyTask extends AsyncTask<String,String,String> {
+	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
 			// super.onPreExecute();
@@ -89,25 +102,23 @@ public class AndroidSocketsReciever extends Activity {
 			try {
 				int portNumber = 4444;
 				boolean listening = true;
-	            ServerSocket serverSocket = new ServerSocket(portNumber);
-	            while (listening) {
-	                new MultiSocketsServerThread(serverSocket.accept(),viewsList).start();
-	            }
+				ServerSocket serverSocket = new ServerSocket(portNumber);
+				while (listening) {
+					new MultiSocketsServerThread(serverSocket.accept(), viewsList).start();
+				}
 			} catch (IOException e) {
-				System.out.println("Exception caught when trying to listen on port " + 4444 + " or listening for a connection");
-				System.out.println(e.getMessage());
+				Log.e("error", "IOException:" + e.getMessage());
 			}
 			return "Task complete";
 		}
-		
-		
+
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			// super.onPostExecute(result);
 			updateDisplay(result);
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
