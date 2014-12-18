@@ -3,25 +3,29 @@ package com.example.androidsocketsserver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.MotionEvent.PointerCoords;
+import android.view.View;
 
-public class MultiSocketsServerThread extends Thread {
+public class MultiSocketsServerThread2 extends Thread {
+	
 	private Socket socket = null;
 	private List<View> viewsList;
-
-	public MultiSocketsServerThread(Socket socket, List<View> viewsList) {
+	private Context context;
+	public MultiSocketsServerThread2(Context context, Socket socket, List<View> viewsList) {
 		super("KKMultiServerThread");
 		this.socket = socket;
 		this.viewsList = viewsList;
+		this.context = context;
 	}
 
 	@SuppressLint("NewApi")
@@ -48,7 +52,8 @@ public class MultiSocketsServerThread extends Thread {
 				// Log.d("hahaID", String.valueOf(v.getId()));
 				if (me != null && v != null) {
 					Log.d("haha", "dispatchTouchEvent");
-					v.dispatchTouchEvent(me);
+					//v.dispatchTouchEvent(me);
+					//ia.dispatchView(v, me);
 				}
 
 				// out.println("echo " + inputLine);
