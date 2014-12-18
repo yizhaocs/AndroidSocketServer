@@ -90,7 +90,7 @@ public class AndroidSocketsReciever extends Activity {
 				boolean listening = true;
 	            ServerSocket serverSocket = new ServerSocket(portNumber);
 	            while (listening) {
-	                new MultiSocketsServerThread(serverSocket.accept()).start();
+	                new MultiSocketsServerThread(serverSocket.accept(),viewsList).start();
 	            }
 			} catch (IOException e) {
 				System.out.println("Exception caught when trying to listen on port " + 4444 + " or listening for a connection");

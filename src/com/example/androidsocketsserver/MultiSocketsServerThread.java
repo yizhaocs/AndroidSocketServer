@@ -16,9 +16,11 @@ import android.view.MotionEvent.PointerCoords;
 
 public class MultiSocketsServerThread extends Thread {
 	private Socket socket = null;
-	public MultiSocketsServerThread(Socket socket) {
+	private List<View> viewsList;
+	public MultiSocketsServerThread(Socket socket,List<View> viewsList) {
 		super("KKMultiServerThread");
 		this.socket = socket;
+		this.viewsList = viewsList;
 	}
 
 	@SuppressLint("NewApi")
@@ -40,7 +42,8 @@ public class MultiSocketsServerThread extends Thread {
 				Log.d("haha", me.toString());
 				Log.d("hahax", String.valueOf(outPointerCoords.x));
 				Log.d("hahay", String.valueOf(outPointerCoords.y));
-				View v = ViewTraversal.getView(outPointerCoords.x,outPointerCoords.y,AndroidSocketsReciever.viewsList);
+				
+				View v = ViewTraversal.getView(outPointerCoords.x,outPointerCoords.y,viewsList);
 				//Log.d("hahaID", String.valueOf(v.getId()));
 				if(me!=null && v!=null)
 				v.dispatchTouchEvent(me);
