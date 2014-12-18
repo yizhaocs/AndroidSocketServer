@@ -28,6 +28,7 @@ public class AndroidSocketsServer extends Activity {
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
+		
 
 	}
 	
@@ -44,7 +45,6 @@ public class AndroidSocketsServer extends Activity {
 
 		@SuppressWarnings("resource")
 		protected String doInBackground(String... params) {
-			List<String> recievedMessages = new ArrayList<String>();
 			try {
 				/*
 				 * The server program begins by creating a new ServerSocket
@@ -93,7 +93,6 @@ public class AndroidSocketsServer extends Activity {
 				 * the socket (the while loop).
 				 */
 				while ((inputLine = in.readLine()) != null) {
-					recievedMessages.add(inputLine);
 					publishProgress(inputLine);
 					out.println("server recieved: " + inputLine);
 					if (inputLine.equals("bye")) {

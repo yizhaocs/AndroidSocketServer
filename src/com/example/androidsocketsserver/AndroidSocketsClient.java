@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -33,8 +35,8 @@ public class AndroidSocketsClient extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				MyTask mSocketsClient = new MyTask();
-				mSocketsClient.execute();
+//				MyTask mSocketsClient = new MyTask();
+//				mSocketsClient.execute();
 			}
 		});
 		
@@ -44,10 +46,13 @@ public class AndroidSocketsClient extends Activity {
 		clientMessage.append(message + "\n");
 	}
 	
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		MyTask mSocketsClient = new MyTask();
-		mSocketsClient.execute();
+		//mSocketsClient.execute(event.toString());
+		mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event.toString());
+		mSocketsClient.cancel(true);
 		return super.onTouchEvent(event);
 	}
 	
@@ -67,22 +72,7 @@ public class AndroidSocketsClient extends Activity {
 			try {
 				Socket kkSocket = new Socket(hostName, portNumber);
 				PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
-//				BufferedReader in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
-//				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-//				String fromServer;
-//				String fromUser;
-				out.println("test");
-//				while ((fromServer = in.readLine()) != null) {
-//					publishProgress("Server: " + fromServer);
-//					if (fromServer.equals("Bye."))
-//						break;
-//
-//					fromUser = "test";
-//					if (fromUser != null) {
-//						publishProgress("Client: " + fromUser);
-//						out.println("test");
-//					}
-//				}
+				out.println(params[0]);
 			} catch (UnknownHostException e) {
 				System.err.println("Don't know about host " + hostName);
 				System.exit(1);
