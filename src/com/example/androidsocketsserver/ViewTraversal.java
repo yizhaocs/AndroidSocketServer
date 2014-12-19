@@ -24,7 +24,7 @@ public class ViewTraversal {
 		} else {
 			for (int i = 0; i < ((ViewGroup) rootView).getChildCount(); i++) {
 				View nextChild = ((ViewGroup) rootView).getChildAt(i);
-				Log.d("views", String.valueOf(nextChild.getId()));
+				//Log.d("views", String.valueOf(nextChild.getId()));
 				//if ((nextChild instanceof LinearLayout == false && nextChild instanceof RelativeLayout == false && nextChild instanceof GridLayout == false)) 
 					res.add(nextChild);
 				

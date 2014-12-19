@@ -29,8 +29,8 @@ import android.widget.TextView;
 public class AndroidSocketsReciever extends Activity {
 	private TextView textView1;
 	static List<View> viewsList;
-	Button button1;
-	AndroidSocketsReciever a = this;
+	private Button button1;
+	private AndroidSocketsReciever a = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class AndroidSocketsReciever extends Activity {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.d("onTouchEvent",event.toString());
 		updateDisplay("2");
 		return super.onTouchEvent(event);
 	}
@@ -95,13 +96,15 @@ public class AndroidSocketsReciever extends Activity {
 
 	protected void updateDisplay(String message) {
 		// textView1.append(message + "\n");
-		textView1.append(message);
+		textView1.append(message + "\n");
 	}
 
 	protected void dispatchView(final View v, final MotionEvent me) {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
-				v.dispatchTouchEvent(me);
+				textView1.append(me.toString()+ "\n");
+				// v.dispatchTouchEvent(me);
+				v.onTouchEvent(me);
 			}
 		});
 

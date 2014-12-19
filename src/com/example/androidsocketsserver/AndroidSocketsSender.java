@@ -12,17 +12,14 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class AndroidSocketsSender extends Activity {
-	private Button buttonSocketsClient1;
 	private TextView clientMessage;
-	MyTask mSocketsClient;
-	List<MyTask> tasks;
+	private MyTask mSocketsClient;
+	private List<MyTask> tasks;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,31 +28,23 @@ public class AndroidSocketsSender extends Activity {
 		clientMessage = (TextView) this.findViewById(R.id.clientMessage);
 		clientMessage.setMovementMethod(new ScrollingMovementMethod());
 		tasks = new ArrayList<AndroidSocketsSender.MyTask>();
-		buttonSocketsClient1 = (Button) this.findViewById(R.id.buttonSocketsClient1);
-		buttonSocketsClient1.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// MyTask mSocketsClient = new MyTask();
-				// mSocketsClient.execute();
-			}
-		});
 
 	}
 
 	protected void updateDisplay(String message) {
 		// clientMessage.append(message + "\n");
-		//clientMessage.append(message);
+		// clientMessage.append(message);
 	}
-
-
-
 
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
+		Log.d("onTouchEvent",me.toString());
+		clientMessage.append(me.toString()+ "\n");
 		mSocketsClient = new MyTask();
-		mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+		// mSocketsClient.execute();
+		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
 		return super.onTouchEvent(me);
 	}
 
@@ -102,7 +91,6 @@ public class AndroidSocketsSender extends Activity {
 			updateDisplay(values[0]);
 			tasks.remove(this);
 		}
-		
-		
+
 	}
 }

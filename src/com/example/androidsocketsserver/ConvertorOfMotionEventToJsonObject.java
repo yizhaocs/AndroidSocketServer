@@ -57,7 +57,7 @@ public class ConvertorOfMotionEventToJsonObject {
 				js.put("yPrecision", me.getYPrecision());
 				js.put("deviceId", me.getDeviceId());
 				js.put("edgeFlags", me.getEdgeFlags());
-				Log.d("jsonSinglePoint", js.toString());
+				// Log.d("jsonSinglePoint", js.toString());
 			} catch (JSONException e) {
 				
 			}
@@ -83,7 +83,7 @@ public class ConvertorOfMotionEventToJsonObject {
 				js.put("edgeFlags", me.getEdgeFlags());
 				js.put("source", me.getSource());
 				js.put("flags", me.getFlags());
-				Log.d("jsonMultiPoints", js.toString());
+				// Log.d("jsonMultiPoints", js.toString());
 			} catch (JSONException e) {
 				
 			}
