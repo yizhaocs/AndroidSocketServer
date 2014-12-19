@@ -45,11 +45,12 @@ public class AndroidSocketsReciever extends Activity {
 		textView1.setOnClickListener(mCorkyListener);
 		textView1.setOnLongClickListener(mOnLongClickListener);
 		button1 = (Button) this.findViewById(R.id.button1);
+		button1.setOnLongClickListener(mOnLongClickListener);
 		button1.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				updateDisplay("ButtonClicked");
+				updateDisplay("OnClickListener");
 
 			}
 		});
@@ -70,7 +71,7 @@ public class AndroidSocketsReciever extends Activity {
 	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			updateDisplay("1");
+			updateDisplay("OnLongClickListener");
 			return false;
 		}
 	};
@@ -119,7 +120,7 @@ public class AndroidSocketsReciever extends Activity {
 		@Override
 		protected void onPreExecute() {
 			// super.onPreExecute();
-			updateDisplay("Starting task");
+			updateDisplay("Starting task" + "\n");
 		};
 
 		@SuppressWarnings("resource")
