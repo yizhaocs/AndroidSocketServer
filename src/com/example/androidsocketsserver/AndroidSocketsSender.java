@@ -41,7 +41,7 @@ public class AndroidSocketsSender extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
 		Log.d("onTouchEvent",me.toString());
-		clientMessage.append(me.toString()+ "\n");
+		//clientMessage.append(me.toString()+ "\n");
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
