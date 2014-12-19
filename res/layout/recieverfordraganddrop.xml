@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/draganddroplayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/toplinear"
+        android:layout_width="fill_parent"
+        android:layout_height="320dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/normal_shape" >
+
+        <ImageView
+            android:id="@+id/dragimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_large" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomlinear"
+        android:layout_width="fill_parent"
+        android:layout_height="160dp"
+        android:background="@drawable/normal_shape" >
+
+        <TextView
+            android:id="@+id/bottomlineartext"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="Drag the image and drop it here..." />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomright"
+        android:layout_width="fill_parent"
+        android:layout_height="160dp"
+        android:background="@drawable/shape" >
+
+        <TextView
+            android:id="@+id/bottomrighttext"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="test" />
+    </LinearLayout>
+
+</GridLayout>
