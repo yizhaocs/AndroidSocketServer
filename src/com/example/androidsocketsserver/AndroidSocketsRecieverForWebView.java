@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -13,24 +12,23 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.MotionEvent.PointerCoords;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class AndroidSocketsRecieverForButton extends Activity {
+public class AndroidSocketsRecieverForWebView extends Activity {
 	private TextView textView1;
 	private List<View> viewsList;
 	private Button button1;
-	private AndroidSocketsRecieverForButton a = this;
+	private AndroidSocketsRecieverForWebView a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 
 	@Override
