@@ -31,7 +31,7 @@ public class AndroidSocketsReciever extends Activity {
 	static List<View> viewsList;
 	private Button button1;
 	private AndroidSocketsReciever a = this;
-
+	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -173,7 +173,7 @@ public class AndroidSocketsReciever extends Activity {
 
 				while ((inputLine = in.readLine()) != null) {
 					JSONObject jo = new JSONObject(inputLine);
-					MotionEvent me = ConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
+					MotionEvent me = mConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
 					PointerCoords outPointerCoords = new PointerCoords();
 					me.getPointerCoords(0, outPointerCoords);
 					Log.d("haha", me.toString());

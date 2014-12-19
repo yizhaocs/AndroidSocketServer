@@ -11,8 +11,21 @@ import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
 
 public class ConvertorOfJsonObjectToMotionEvent {
+	private static ConvertorOfJsonObjectToMotionEvent instance = null;
+
+	private ConvertorOfJsonObjectToMotionEvent() {
+
+	}
+
+	public static ConvertorOfJsonObjectToMotionEvent getInstance() {
+		if (instance == null) {
+			instance = new ConvertorOfJsonObjectToMotionEvent();
+		}
+		return instance;
+	}
+
 	@SuppressLint("NewApi")
-	public static MotionEvent createMotionEvent(JSONObject jsonObject) throws JSONException {
+	public MotionEvent createMotionEvent(JSONObject jsonObject) throws JSONException {
 		if (1 == jsonObject.getInt("pointerCount")) {
 			long downTime = SystemClock.uptimeMillis();// jsonObject.getLong("downTime");//SystemClock.uptimeMillis();
 			long eventTime = SystemClock.uptimeMillis();// jsonObject.getLong("eventTime");

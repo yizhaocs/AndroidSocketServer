@@ -14,8 +14,21 @@ import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
 
 public class ConvertorOfMotionEventToJsonObject {
+	private static ConvertorOfMotionEventToJsonObject instance = null;
+
+	private ConvertorOfMotionEventToJsonObject() {
+
+	}
+
+	public static ConvertorOfMotionEventToJsonObject getInstance() {
+		if (instance == null) {
+			instance = new ConvertorOfMotionEventToJsonObject();
+		}
+		return instance;
+	}
+
 	@SuppressLint("NewApi")
-	public static JSONObject motionEventToJsonObject(MotionEvent me){
+	public JSONObject motionEventToJsonObject(MotionEvent me){
 		List<float[]> pointerCoordsList = new ArrayList<float[]>();
 		List<int[]> pointerPropertiesList = new ArrayList<int[]>();
 		for (int i = 0; i < me.getPointerCount(); i++) {

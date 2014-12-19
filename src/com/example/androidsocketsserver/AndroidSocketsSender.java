@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 public class AndroidSocketsSender extends Activity {
+	ConvertorOfMotionEventToJsonObject mConvertorOfMotionEventToJsonObject = ConvertorOfMotionEventToJsonObject.getInstance();
 	private TextView clientMessage;
 	private MyTask mSocketsClient;
 	private List<MyTask> tasks;
@@ -44,7 +45,7 @@ public class AndroidSocketsSender extends Activity {
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
 		return super.onTouchEvent(me);
 	}
 
