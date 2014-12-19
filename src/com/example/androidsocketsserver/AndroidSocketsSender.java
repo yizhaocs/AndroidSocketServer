@@ -6,6 +6,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,6 +28,22 @@ public class AndroidSocketsSender extends Activity {
 	private TextView clientMessage;
 	private MyTask mSocketsClient;
 	private List<MyTask> tasks;
+	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+	// private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
+	// private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+	private static final int CORE_POOL_SIZE = CPU_COUNT * 2 + 1;
+	private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 5 + 1;
+	private static final int KEEP_ALIVE = 1;
+	private static final BlockingQueue<Runnable> sPoolWorkQueue = new LinkedBlockingQueue<Runnable>(128);
+
+	private static final ThreadFactory sThreadFactory = new ThreadFactory() {
+		private final AtomicInteger mCount = new AtomicInteger(1);
+
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+		}
+	};
+	public static final Executor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +63,15 @@ public class AndroidSocketsSender extends Activity {
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.d("onTouchEvent",event.toString());
-		//clientMessage.append(me.toString()+ "\n");
+		Log.d("onTouchEvent", event.toString());
+		// clientMessage.append(me.toString()+ "\n");
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
 		return super.onTouchEvent(event);
 	}
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onGenericMotionEvent(MotionEvent event) {
@@ -56,7 +79,7 @@ public class AndroidSocketsSender extends Activity {
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
 		return super.onGenericMotionEvent(event);
 	}
 
