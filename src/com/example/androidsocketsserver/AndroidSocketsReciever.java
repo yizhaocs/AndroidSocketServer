@@ -32,13 +32,14 @@ public class AndroidSocketsReciever extends Activity {
 	private Button button1;
 	private AndroidSocketsReciever a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reciever);
 		textView1 = (TextView) this.findViewById(R.id.textView1);
 		textView1.setMovementMethod(new ScrollingMovementMethod());
-		//viewsList = new ArrayList<View>();
+		// viewsList = new ArrayList<View>();
 		viewsList = ViewTraversal.travasalViews(this.findViewById(R.id.recieverContent));
 		// Initialize the TextView for vertical scrolling
 		textView1.setOnClickListener(mCorkyListener);
@@ -76,16 +77,16 @@ public class AndroidSocketsReciever extends Activity {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.d("onTouchEvent",event.toString());
+		Log.d("onTouchEvent", event.toString());
 		updateDisplay("2");
 		return super.onTouchEvent(event);
 	}
 
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent ev) {
-//		// TODO Auto-generated method stub
-//		return super.dispatchTouchEvent(ev);
-//	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	// // TODO Auto-generated method stub
+	// return super.dispatchTouchEvent(ev);
+	// }
 
 	@SuppressLint("NewApi")
 	@Override
@@ -99,12 +100,16 @@ public class AndroidSocketsReciever extends Activity {
 		textView1.append(message);
 	}
 
-	protected void dispatchView(final View v, final MotionEvent me) {
+	protected void dispatchView(final View v, final MotionEvent event) {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
-				//textView1.append(me.toString()+ "\n");
-				v.dispatchTouchEvent(me);
-				// v.onTouchEvent(me);
+				// textView1.append(me.toString()+ "\n");
+				if (viewsList.contains(v)) {
+					v.dispatchTouchEvent(event);
+				} else {
+					v.onTouchEvent(event);
+				}
+				// 
 			}
 		});
 
@@ -151,13 +156,12 @@ public class AndroidSocketsReciever extends Activity {
 
 		private Socket socket = null;
 		private List<View> viewsList;
-		
 
 		public MultiSocketsServerThread(Socket socket, List<View> viewsList) {
 			super("KKMultiServerThread");
 			this.socket = socket;
 			this.viewsList = viewsList;
-		
+
 		}
 
 		@SuppressLint("NewApi")

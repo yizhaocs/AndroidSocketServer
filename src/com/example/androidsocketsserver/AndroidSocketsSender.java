@@ -39,14 +39,25 @@ public class AndroidSocketsSender extends Activity {
 
 	@SuppressLint("NewApi")
 	@Override
-	public boolean onTouchEvent(MotionEvent me) {
-		Log.d("onTouchEvent",me.toString());
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.d("onTouchEvent",event.toString());
 		//clientMessage.append(me.toString()+ "\n");
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		return super.onTouchEvent(me);
+		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		return super.onTouchEvent(event);
+	}
+	
+	@SuppressLint("NewApi")
+	@Override
+	public boolean onGenericMotionEvent(MotionEvent event) {
+		updateDisplay("3");
+		mSocketsClient = new MyTask();
+		// mSocketsClient.execute();
+		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+		 mSocketsClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		return super.onGenericMotionEvent(event);
 	}
 
 	public class MyTask extends AsyncTask<String, String, String> {
