@@ -26,26 +26,26 @@ public class ConvertorOfJsonObjectToMotionEvent {
 
 	@SuppressLint("NewApi")
 	public MotionEvent createMotionEvent(JSONObject jsonObject) throws JSONException {
-		if (1 == jsonObject.getInt("pointerCount")) {
-			long downTime = SystemClock.uptimeMillis();// jsonObject.getLong("downTime");//SystemClock.uptimeMillis();
-			long eventTime = SystemClock.uptimeMillis();// jsonObject.getLong("eventTime");
-			int action = jsonObject.getInt("action");
-			float x = Float.valueOf(jsonObject.getString("x"));
-			float y = Float.valueOf(jsonObject.getString("y"));
-			int metaState = jsonObject.getInt("metaState");
-
-			float pressure = Float.valueOf(jsonObject.getString("pressure"));
-			float xPrecision = Float.valueOf(jsonObject.getString("xPrecision"));
-			float yPrecision = Float.valueOf(jsonObject.getString("yPrecision"));
-
-			float size = Float.valueOf(jsonObject.getString("size"));
-			float edgeFlags = Float.valueOf(jsonObject.getString("edgeFlags"));
-			float deviceId = Float.valueOf(jsonObject.getString("deviceId"));
-
-			MotionEvent me = MotionEvent.obtain(downTime, eventTime, action, x, y, metaState);
-
-			return me;
-		} else {
+//		if (1 == jsonObject.getInt("pointerCount")) {
+//			long downTime = SystemClock.uptimeMillis();// jsonObject.getLong("downTime");//SystemClock.uptimeMillis();
+//			long eventTime = SystemClock.uptimeMillis();// jsonObject.getLong("eventTime");
+//			int action = jsonObject.getInt("action");
+//			float x = Float.valueOf(jsonObject.getString("x"));
+//			float y = Float.valueOf(jsonObject.getString("y"));
+//			int metaState = jsonObject.getInt("metaState");
+//
+//			float pressure = Float.valueOf(jsonObject.getString("pressure"));
+//			float xPrecision = Float.valueOf(jsonObject.getString("xPrecision"));
+//			float yPrecision = Float.valueOf(jsonObject.getString("yPrecision"));
+//
+//			float size = Float.valueOf(jsonObject.getString("size"));
+//			float edgeFlags = Float.valueOf(jsonObject.getString("edgeFlags"));
+//			float deviceId = Float.valueOf(jsonObject.getString("deviceId"));
+//
+//			MotionEvent me = MotionEvent.obtain(downTime, eventTime, action, x, y, metaState);
+//
+//			return me;
+//		} else {
 			long downTime = jsonObject.getLong("downTime");
 			long eventTime = jsonObject.getLong("eventTime");
 			int action = jsonObject.getInt("action");
@@ -99,6 +99,6 @@ public class ConvertorOfJsonObjectToMotionEvent {
 			MotionEvent me = MotionEvent.obtain(downTime, eventTime, action, pointerCount, pPs, pCs, metaState, buttonState, xPrecision, yPrecision, deviceId, edgeFlags, source, flags);
 			// MotionEventToJson(me);
 			return me;
-		}
+		//}
 	}
 }

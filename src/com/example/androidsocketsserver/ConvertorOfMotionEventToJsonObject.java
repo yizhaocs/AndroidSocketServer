@@ -55,26 +55,26 @@ public class ConvertorOfMotionEventToJsonObject {
 		}
 		int pointCount = me.getPointerCount();
 		JSONObject js = new JSONObject();
-		if(pointCount == 1){
-			try {
-				js.put("pointerCount", pointCount);
-				js.put("downTime", me.getDownTime());
-				js.put("eventTime", me.getEventTime());
-				js.put("action", me.getAction());
-				js.put("x", me.getX());
-				js.put("y", me.getY());
-				js.put("pressure", me.getPressure());
-				js.put("size", me.getSize());
-				js.put("metaState", me.getMetaState());
-				js.put("xPrecision", me.getXPrecision());
-				js.put("yPrecision", me.getYPrecision());
-				js.put("deviceId", me.getDeviceId());
-				js.put("edgeFlags", me.getEdgeFlags());
-				// Log.d("jsonSinglePoint", js.toString());
-			} catch (JSONException e) {
-				
-			}
-		}else{
+//		if(pointCount == 1){
+//			try {
+//				js.put("pointerCount", pointCount);
+//				js.put("downTime", me.getDownTime());
+//				js.put("eventTime", me.getEventTime());
+//				js.put("action", me.getAction());
+//				js.put("x", me.getX());
+//				js.put("y", me.getY());
+//				js.put("pressure", me.getPressure());
+//				js.put("size", me.getSize());
+//				js.put("metaState", me.getMetaState());
+//				js.put("xPrecision", me.getXPrecision());
+//				js.put("yPrecision", me.getYPrecision());
+//				js.put("deviceId", me.getDeviceId());
+//				js.put("edgeFlags", me.getEdgeFlags());
+//				// Log.d("jsonSinglePoint", js.toString());
+//			} catch (JSONException e) {
+//				
+//			}
+//		}else{
 			try {
 				js.put("pointerCount", me.getPointerCount());
 				js.put("downTime", me.getDownTime());
@@ -100,7 +100,7 @@ public class ConvertorOfMotionEventToJsonObject {
 			} catch (JSONException e) {
 				
 			}
-		}
+//		}
 		return js;
 	}
 }
