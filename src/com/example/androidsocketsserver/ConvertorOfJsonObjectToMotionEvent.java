@@ -26,8 +26,7 @@ public class ConvertorOfJsonObjectToMotionEvent {
 
 	@SuppressLint("NewApi")
 	public MotionEvent createMotionEvent(JSONObject jsonObject) throws JSONException {
-
-		int pointerCount = jsonObject.getInt("pointerCount");
+		int	pointerCount = jsonObject.getInt("pointerCount");
 		PointerCoords[] pointerCoords = new PointerCoords[pointerCount];
 		PointerProperties[] pointerProperties = new PointerProperties[pointerCount];
 		JSONArray japc = new JSONArray(jsonObject.getString("pointerCoords"));

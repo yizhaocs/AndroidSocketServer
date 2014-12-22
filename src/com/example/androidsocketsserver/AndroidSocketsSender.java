@@ -68,7 +68,11 @@ public class AndroidSocketsSender extends Activity {
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		try {
+			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
+		} catch (Exception e) {
+			Log.e("error", "Exception:" + e.getMessage());
+		}
 		return super.onTouchEvent(event);
 	}
 
@@ -79,7 +83,11 @@ public class AndroidSocketsSender extends Activity {
 		mSocketsClient = new MyTask();
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), mConvertorOfMotionEventToJsonObject.motionEventToJsonObject(event).toString());
+		try {
+			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
+		} catch (Exception e) {
+			Log.e("error", "Exception:" + e.getMessage());
+		}
 		return super.onGenericMotionEvent(event);
 	}
 
@@ -100,6 +108,7 @@ public class AndroidSocketsSender extends Activity {
 			try {
 				Socket kkSocket = new Socket(hostName, portNumber);
 				PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+				Log.d("hahahahaha:", params[0].toString());
 				out.println(params[0]);
 			} catch (UnknownHostException e) {
 				System.err.println("Don't know about host " + hostName);

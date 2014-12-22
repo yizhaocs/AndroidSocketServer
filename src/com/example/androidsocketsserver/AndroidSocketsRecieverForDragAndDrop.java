@@ -1,10 +1,23 @@
 package com.example.androidsocketsserver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.androidsocketsserver.AndroidSocketsRecieverForButton.MultiSocketsServerThread;
+import com.example.androidsocketsserver.AndroidSocketsRecieverForButton.MyTask;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
@@ -22,9 +35,10 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private static final int NONE = 0;
 	private static final int MOVE = 1;
 	private int mode = NONE;
-	List<View> viewlist;
+	List<View> viewsList;
 	private View movingView = null;
-
+	private AndroidSocketsRecieverForDragAndDrop a = this;
+	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	/** Called when the activity is first created. */
 
 	@Override
@@ -32,8 +46,8 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
 		View rootView = findViewById(R.id.rootview);
-		viewlist = ViewTraversal.travasalViews(rootView);
-		for (View v : viewlist) {
+		viewsList = ViewTraversal.travasalViews(rootView);
+		for (View v : viewsList) {
 			if (v instanceof ImageView)
 				Log.d("draganddroplog", String.valueOf(v.getId()));
 		}
@@ -43,6 +57,24 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		findViewById(R.id.topright).setOnDragListener(new MyDragListener());
 		findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener());
 		findViewById(R.id.bottomright).setOnDragListener(new MyDragListener());
+		
+		MyTask mSocketsServer = new MyTask();
+		mSocketsServer.execute();
+
+	}
+	
+	protected void dispatchView(final View v, final MotionEvent event) {
+		this.runOnUiThread(new Runnable() {
+			public void run() {
+				// textView1.append(me.toString()+ "\n");
+				if (viewsList.contains(v)) {
+					v.dispatchTouchEvent(event);
+				} else {
+					v.onTouchEvent(event);
+				}
+				// 
+			}
+		});
 
 	}
 
@@ -91,23 +123,23 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (movingView == null) {
+		//if (movingView == null) {
 			PointerCoords outPointerCoords = new PointerCoords();
 			event.getPointerCoords(0, outPointerCoords);
-			movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
+			movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
 			Log.d("movingView.getId():", String.valueOf(movingView.getId()));
 
-			if (movingView.getId() == R.id.myimage1) {
+			//if (movingView.getId() == R.id.myimage1) {
 				ClipData data = ClipData.newPlainText("", "");
 				Log.d("movingView", String.valueOf(outPointerCoords.x));
 				Log.d("movingView", String.valueOf(outPointerCoords.y));
 				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
 				movingView.startDrag(data, shadowBuilder, movingView, 0);
 				// movingView.setVisibility(View.INVISIBLE);
-			} else {
-				movingView = null;
-			}
-		}
+//			} else {
+//				movingView = null;
+//			}
+		//}
 
 		return super.onTouchEvent(event);
 	}
@@ -132,4 +164,100 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	// }
 	// }
 	// }
+	
+	
+	public class MyTask extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			// super.onPreExecute();
+			//updateDisplay("Starting task" + "\n");
+		};
+
+		@SuppressWarnings("resource")
+		protected String doInBackground(String... params) {
+			try {
+				int portNumber = 4444;
+				boolean listening = true;
+				ServerSocket serverSocket = new ServerSocket(portNumber);
+				while (listening) {
+					new MultiSocketsServerThread(serverSocket.accept(), viewsList).start();
+				}
+			} catch (IOException e) {
+				Log.e("error", "IOException:" + e.getMessage());
+			}
+			return "Task complete";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			// super.onPostExecute(result);
+			//updateDisplay(result);
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			// TODO Auto-generated method stub
+			// super.onProgressUpdate(values);
+			//updateDisplay(values[0]);
+		}
+	}
+
+	public class MultiSocketsServerThread extends Thread {
+
+		private Socket socket = null;
+		private List<View> viewsList;
+
+		public MultiSocketsServerThread(Socket socket, List<View> viewsList) {
+			super("KKMultiServerThread");
+			this.socket = socket;
+			this.viewsList = viewsList;
+
+		}
+
+		@SuppressLint("NewApi")
+		public void run() {
+
+			try {
+				// PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+				String inputLine;
+
+				// out.println("connection is setup between server and client");
+
+				while ((inputLine = in.readLine()) != null) {
+					JSONObject jo = new JSONObject(inputLine);
+					Log.d("whatf", jo.toString());
+					MotionEvent me = mConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
+					PointerCoords outPointerCoords = new PointerCoords();
+					me.getPointerCoords(0, outPointerCoords);
+					Log.d("haha", me.toString());
+					Log.d("hahax", String.valueOf(outPointerCoords.x));
+					Log.d("hahay", String.valueOf(outPointerCoords.y));
+
+					View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+					// Log.d("hahaID", String.valueOf(v.getId()));
+					if (me != null && v != null) {
+						Log.d("haha", "dispatchTouchEvent");
+						// v.dispatchTouchEvent(me);
+						a.dispatchView(v, me);
+					}
+
+					// out.println("echo " + inputLine);
+					if (inputLine.equals("Bye")) {
+						break;
+					}
+				}
+				socket.close();
+			} catch (IOException e) {
+				Log.e("error", "IOException:" + e.getMessage());
+
+			} catch (JSONException e) {
+				Log.e("error", "JSONException:" + e.getMessage());
+
+			}
+		}
+
+	}
 }

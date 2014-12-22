@@ -1,14 +1,10 @@
 package com.example.androidsocketsserver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
@@ -28,79 +24,110 @@ public class ConvertorOfMotionEventToJsonObject {
 	}
 
 	@SuppressLint("NewApi")
-	public JSONObject motionEventToJsonObject(MotionEvent me){
-		List<float[]> pointerCoordsList = new ArrayList<float[]>();
-		List<int[]> pointerPropertiesList = new ArrayList<int[]>();
-		for (int i = 0; i < me.getPointerCount(); i++) {
-			PointerProperties outPointerProperties = new PointerProperties();
-			me.getPointerProperties(i, outPointerProperties);
-			int[] pointerPropertiesArray = new int[2];
-			pointerPropertiesArray[0] = outPointerProperties.id;
-			pointerPropertiesArray[1] = outPointerProperties.toolType;
-			pointerPropertiesList.add(pointerPropertiesArray);
-			
-			PointerCoords outPointerCoords = new PointerCoords();
-			me.getPointerCoords(i, outPointerCoords);
-			float[] pointerCoordsArray = new float[9];
-			pointerCoordsArray[0] = outPointerCoords.x;
-			pointerCoordsArray[1] = outPointerCoords.y;
-			pointerCoordsArray[2] = outPointerCoords.pressure;
-			pointerCoordsArray[3] = outPointerCoords.size;
-			pointerCoordsArray[4] = outPointerCoords.touchMajor;
-			pointerCoordsArray[5] = outPointerCoords.touchMinor;
-			pointerCoordsArray[6] = outPointerCoords.toolMajor;
-			pointerCoordsArray[7] = outPointerCoords.toolMinor;
-			pointerCoordsArray[8] = outPointerCoords.orientation;
-			pointerCoordsList.add(pointerCoordsArray);
+	public JSONObject motionEventToJsonObject(MotionEvent event) throws Exception {
+
+		JSONObject jo = new JSONObject();
+
+		int pointerCount = event.getPointerCount();
+		PointerCoords[] pointerCoords = new PointerCoords[pointerCount];
+		PointerProperties[] pointerProperties = new PointerProperties[pointerCount];
+		JSONArray arrPointerCoords = new JSONArray();
+		JSONArray arrPointerProperties = new JSONArray();
+		for (int i = 0; i < pointerCount; ++i) {
+			JSONObject jpc = new JSONObject();
+			JSONObject jpp = new JSONObject();
+			pointerCoords[i] = new PointerCoords();
+			event.getPointerCoords(i, pointerCoords[i]);
+			jpc.put("orientation", pointerCoords[i].orientation);
+			jpc.put("pressure", pointerCoords[i].pressure);
+			jpc.put("size", pointerCoords[i].size);
+			jpc.put("toolMajor", pointerCoords[i].toolMajor);
+			jpc.put("toolMinor", pointerCoords[i].toolMinor);
+			jpc.put("touchMajor", pointerCoords[i].touchMajor);
+			jpc.put("touchMinor", pointerCoords[i].touchMinor);
+			jpc.put("x", pointerCoords[i].x);
+			jpc.put("y", pointerCoords[i].y);
+			arrPointerCoords.put(jpc);
+
+			pointerProperties[i] = new PointerProperties();
+			event.getPointerProperties(i, pointerProperties[i]);
+			jpp.put("id", pointerProperties[i].id);
+			jpp.put("toolType", pointerProperties[i].toolType);
+			arrPointerProperties.put(jpp);
 		}
-		int pointCount = me.getPointerCount();
-		JSONObject js = new JSONObject();
-//		if(pointCount == 1){
-//			try {
-//				js.put("pointerCount", pointCount);
-//				js.put("downTime", me.getDownTime());
-//				js.put("eventTime", me.getEventTime());
-//				js.put("action", me.getAction());
-//				js.put("x", me.getX());
-//				js.put("y", me.getY());
-//				js.put("pressure", me.getPressure());
-//				js.put("size", me.getSize());
-//				js.put("metaState", me.getMetaState());
-//				js.put("xPrecision", me.getXPrecision());
-//				js.put("yPrecision", me.getYPrecision());
-//				js.put("deviceId", me.getDeviceId());
-//				js.put("edgeFlags", me.getEdgeFlags());
-//				// Log.d("jsonSinglePoint", js.toString());
-//			} catch (JSONException e) {
-//				
-//			}
-//		}else{
-			try {
-				js.put("pointerCount", me.getPointerCount());
-				js.put("downTime", me.getDownTime());
-				js.put("eventTime", me.getEventTime());
-				js.put("action", me.getAction());
-				
-				for(int i = 0; i < pointerPropertiesList.size(); i++){
-					js.put("pointerProperties" + "_" + i, Arrays.toString(pointerPropertiesList.get(i)));
-				}
-				for(int f = 0; f < pointerCoordsList.size(); f++){
-					js.put("pointeRcoords" + "_" + f, Arrays.toString(pointerCoordsList.get(f)));
-				}
-				
-				js.put("metaState", me.getMetaState());
-				js.put("buttonState", me.getButtonState());
-				js.put("xPrecision", me.getXPrecision());
-				js.put("yPrecision", me.getYPrecision());
-				js.put("deviceId", me.getDeviceId());
-				js.put("edgeFlags", me.getEdgeFlags());
-				js.put("source", me.getSource());
-				js.put("flags", me.getFlags());
-				// Log.d("jsonMultiPoints", js.toString());
-			} catch (JSONException e) {
-				
-			}
-//		}
-		return js;
+
+		int actionEvent = event.getAction();
+		jo.put("downTime", event.getDownTime());
+		jo.put("eventTime", event.getEventTime());
+		jo.put("actionEvent", actionEvent);
+		jo.put("pointerCount", event.getPointerCount());
+		jo.put("pointerProperties", arrPointerProperties.toString());
+		jo.put("pointerCoords", arrPointerCoords.toString());
+		jo.put("metaState", event.getMetaState());
+		jo.put("buttonState", event.getButtonState());
+		jo.put("xPrecision", event.getXPrecision());
+		jo.put("yPrecision", event.getYPrecision());
+		jo.put("deviceId", event.getDeviceId());
+		jo.put("edgeFlags", event.getEdgeFlags());
+		jo.put("source", event.getSource());
+		jo.put("flags", event.getFlags());
+
+		return jo;
 	}
+
+	// public JSONObject motionEventToJsonObject(MotionEvent event) {
+	// JSONObject jo = new JSONObject();
+	// try {
+	// int pointerCount = event.getPointerCount();
+	// PointerCoords[] pointerCoords = new PointerCoords[pointerCount];
+	// PointerProperties[] pointerProperties = new PointerProperties[pointerCount];
+	// JSONArray arrPointerCoords = new JSONArray();
+	// JSONArray arrPointerProperties = new JSONArray();
+	// for (int i = 0; i < pointerCount; ++i) {
+	// JSONObject jpc = new JSONObject();
+	// JSONObject jpp = new JSONObject();
+	// pointerCoords[i] = new PointerCoords();
+	// event.getPointerCoords(i, pointerCoords[i]);
+	// jpc.put("orientation", pointerCoords[i].orientation);
+	//
+	// jpc.put("pressure", pointerCoords[i].pressure);
+	//
+	// jpc.put("size", pointerCoords[i].size);
+	// jpc.put("toolMajor", pointerCoords[i].toolMajor);
+	// jpc.put("toolMinor", pointerCoords[i].toolMinor);
+	// jpc.put("touchMajor", pointerCoords[i].touchMajor);
+	// jpc.put("touchMinor", pointerCoords[i].touchMinor);
+	// jpc.put("x", pointerCoords[i].x);
+	// jpc.put("y", pointerCoords[i].y);
+	// arrPointerCoords.put(jpc);
+	//
+	// pointerProperties[i] = new PointerProperties();
+	// event.getPointerProperties(i, pointerProperties[i]);
+	// jpp.put("id", pointerProperties[i].id);
+	// jpp.put("toolType", pointerProperties[i].toolType);
+	// arrPointerProperties.put(jpp);
+	// }
+	//
+	// int actionEvent = event.getAction();
+	// jo.put("downTime", event.getDownTime());
+	// jo.put("eventTime", event.getEventTime());
+	// jo.put("actionEvent", actionEvent);
+	// jo.put("pointerCount", event.getPointerCount());
+	// jo.put("pointerProperties", arrPointerProperties.toString());
+	// jo.put("pointerCoords", arrPointerCoords.toString());
+	// jo.put("metaState", event.getMetaState());
+	// jo.put("buttonState", event.getButtonState());
+	// jo.put("xPrecision", event.getXPrecision());
+	// jo.put("yPrecision", event.getYPrecision());
+	// jo.put("deviceId", event.getDeviceId());
+	// jo.put("edgeFlags", event.getEdgeFlags());
+	// jo.put("source", event.getSource());
+	// jo.put("flags", event.getFlags());
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return jo;
+	// }
+	//
 }
