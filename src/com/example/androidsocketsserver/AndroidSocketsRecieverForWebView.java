@@ -38,7 +38,7 @@ public class AndroidSocketsRecieverForWebView extends Activity {
 		textView1 = (TextView) this.findViewById(R.id.textView1);
 		textView1.setMovementMethod(new ScrollingMovementMethod());
 		// viewsList = new ArrayList<View>();
-		viewsList = ViewTraversal.travasalViews(this.findViewById(R.id.buttonlayout));
+		viewsList = ViewTraversal.travasalViews(this.findViewById(R.id.recieverrootview));
 		// Initialize the TextView for vertical scrolling
 		textView1.setOnClickListener(mCorkyListener);
 		textView1.setOnLongClickListener(mOnLongClickListener);
