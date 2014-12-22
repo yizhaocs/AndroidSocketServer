@@ -68,8 +68,10 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			public void run() {
 				// textView1.append(me.toString()+ "\n");
 				if (viewsList.contains(v)) {
+					Log.d("AAA","v.dispatchTouchEvent(event)");
 					v.dispatchTouchEvent(event);
 				} else {
+					Log.d("AAA","v.onTouchEvent(event)");
 					v.onTouchEvent(event);
 				}
 				// 

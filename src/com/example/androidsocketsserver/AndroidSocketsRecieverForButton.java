@@ -178,7 +178,13 @@ public class AndroidSocketsRecieverForButton extends Activity {
 
 				while ((inputLine = in.readLine()) != null) {
 					JSONObject jo = new JSONObject(inputLine);
-					MotionEvent me = mConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
+					MotionEvent me = null;
+					try {
+						me = MotionEventManager.restoreMotionEvent(jo);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					PointerCoords outPointerCoords = new PointerCoords();
 					me.getPointerCoords(0, outPointerCoords);
 					Log.d("haha", me.toString());
