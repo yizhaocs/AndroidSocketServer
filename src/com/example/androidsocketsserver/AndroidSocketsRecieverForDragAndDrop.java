@@ -26,6 +26,7 @@ import android.view.MotionEvent.PointerCoords;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,6 +40,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDrop a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
+
 	/** Called when the activity is first created. */
 
 	@Override
@@ -52,29 +54,42 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				Log.d("draganddroplog", String.valueOf(v.getId()));
 		}
 		findViewById(R.id.myimage1).setOnTouchListener(new OverrideTouchListener());
-		
+		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
+
 		findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
 		findViewById(R.id.topright).setOnDragListener(new MyDragListener());
 		findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener());
 		findViewById(R.id.bottomright).setOnDragListener(new MyDragListener());
-		
+
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 
 	}
-	
+
+	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
+		@Override
+		public boolean onLongClick(View v) {
+			Log.d("XYXYXY", "onLongClick");
+//			ClipData data = ClipData.newPlainText("", "");
+//			DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+//			movingView.startDrag(data, shadowBuilder, v, 0);
+//			movingView.setVisibility(View.INVISIBLE);
+			return false;
+		}
+	};
+
 	protected void dispatchView(final View v, final MotionEvent event) {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				// textView1.append(me.toString()+ "\n");
 				if (viewsList.contains(v)) {
-					Log.d("AAA","v.dispatchTouchEvent(event)");
+					Log.d("AAA", "v.dispatchTouchEvent(event)");
 					v.dispatchTouchEvent(event);
 				} else {
-					Log.d("AAA","v.onTouchEvent(event)");
+					Log.d("AAA", "v.onTouchEvent(event)");
 					v.onTouchEvent(event);
 				}
-				// 
+				//
 			}
 		});
 
@@ -123,56 +138,55 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		//if (movingView == null) {
-			PointerCoords outPointerCoords = new PointerCoords();
-			event.getPointerCoords(0, outPointerCoords);
-			movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
-			Log.d("movingView.getId():", String.valueOf(movingView.getId()));
-
-			//if (movingView.getId() == R.id.myimage1) {
-				ClipData data = ClipData.newPlainText("", "");
-				Log.d("movingView", String.valueOf(outPointerCoords.x));
-				Log.d("movingView", String.valueOf(outPointerCoords.y));
-				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
-				movingView.startDrag(data, shadowBuilder, movingView, 0);
-				// movingView.setVisibility(View.INVISIBLE);
+	
+//	 @Override
+//	 public boolean onTouchEvent(MotionEvent event) {
+//	 //if (movingView == null) {
+//	 PointerCoords outPointerCoords = new PointerCoords();
+//	 event.getPointerCoords(0, outPointerCoords);
+//	 movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+//	 Log.d("movingView.getId():", String.valueOf(movingView.getId()));
+//	
+//	 //if (movingView.getId() == R.id.myimage1) {
+//	 ClipData data = ClipData.newPlainText("", "");
+//	 Log.d("movingView", String.valueOf(outPointerCoords.x));
+//	 Log.d("movingView", String.valueOf(outPointerCoords.y));
+//	 DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
+//	 movingView.startDrag(data, shadowBuilder, movingView, 0);
+//	 // movingView.setVisibility(View.INVISIBLE);
+//	 // } else {
+//	 // movingView = null;
+//	 // }
+//	 //}
+//	
+//	 return super.onTouchEvent(event);
+//	 }
+//	private final class OverrideTouchListener implements OnTouchListener {
+//		@Override
+//		public boolean onTouch(View view, MotionEvent event) {
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//				PointerCoords outPointerCoords = new PointerCoords();
+//				event.getPointerCoords(0, outPointerCoords);
+//				movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
+//				Log.d("movingView", String.valueOf(outPointerCoords.x));
+//				Log.d("movingView", String.valueOf(outPointerCoords.y));
+//				ClipData data = ClipData.newPlainText("", "");
+//				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+//				movingView.startDrag(data, shadowBuilder, view, 0);
+//				movingView.setVisibility(View.INVISIBLE);
+//				return true;
 //			} else {
-//				movingView = null;
+//				return false;
 //			}
-		//}
+//		}
+//	}
 
-		return super.onTouchEvent(event);
-	}
-	// private final class OverrideTouchListener implements OnTouchListener {
-	// @Override
-	// public boolean onTouch(View view, MotionEvent event) {
-	// if (event.getAction() == MotionEvent.ACTION_DOWN) {
-	//
-	//
-	// PointerCoords outPointerCoords = new PointerCoords();
-	// event.getPointerCoords(0, outPointerCoords);
-	// movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
-	// Log.d("movingView", String.valueOf(outPointerCoords.x));
-	// Log.d("movingView", String.valueOf(outPointerCoords.y));
-	// ClipData data = ClipData.newPlainText("", "");
-	// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-	// movingView.startDrag(data, shadowBuilder, view, 0);
-	// movingView.setVisibility(View.INVISIBLE);
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
-	// }
-	
-	
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
 			// super.onPreExecute();
-			//updateDisplay("Starting task" + "\n");
+			// updateDisplay("Starting task" + "\n");
 		};
 
 		@SuppressWarnings("resource")
@@ -194,14 +208,14 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			// super.onPostExecute(result);
-			//updateDisplay(result);
+			// updateDisplay(result);
 		}
 
 		@Override
 		protected void onProgressUpdate(String... values) {
 			// TODO Auto-generated method stub
 			// super.onProgressUpdate(values);
-			//updateDisplay(values[0]);
+			// updateDisplay(values[0]);
 		}
 	}
 
