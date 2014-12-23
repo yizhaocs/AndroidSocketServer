@@ -87,10 +87,11 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	protected void dispatchView(final View v, final MotionEvent event) {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
+				dispatchTouchEvent(event);
 				// textView1.append(me.toString()+ "\n");
 				//if (viewsList.contains(v)) {
 					Log.d("AAA", "v.dispatchTouchEvent(event)");
-					v.dispatchTouchEvent(event);
+					//v.dispatchTouchEvent(event);
 //				} else {
 //					Log.d("AAA", "v.onTouchEvent(event)");
 //					v.onTouchEvent(event);
@@ -189,17 +190,18 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 					Log.d("haha", me.toString());
 					Log.d("hahax", String.valueOf(outPointerCoords.x));
 					Log.d("hahay", String.valueOf(outPointerCoords.y));
-
-					View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
-					// Log.d("hahaID", String.valueOf(v.getId()));
-					if (me != null && v != null) {
-						Log.d("haha", "dispatchTouchEvent");
-						// v.dispatchTouchEvent(me);
-						a.dispatchView(v, me);
-						//a.dispatchTouchEvent(me);
-						
-					}
-
+//
+//					View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+//					// Log.d("hahaID", String.valueOf(v.getId()));
+//					if (me != null && v != null) {
+//						Log.d("haha", "dispatchTouchEvent");
+//						// v.dispatchTouchEvent(me);
+//						//a.dispatchView(v, me);
+//						//a.dispatchTouchEvent(me);
+//						
+//					}
+					a.dispatchView(null, me);
+					//a.dispatchTouchEvent(me);
 					// out.println("echo " + inputLine);
 					if (inputLine.equals("Bye")) {
 						break;
