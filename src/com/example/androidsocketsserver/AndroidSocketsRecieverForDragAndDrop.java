@@ -10,17 +10,14 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.androidsocketsserver.AndroidSocketsRecieverForButton.MultiSocketsServerThread;
-import com.example.androidsocketsserver.AndroidSocketsRecieverForButton.MyTask;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.View;
@@ -29,8 +26,8 @@ import android.view.View.OnDragListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private static final int NONE = 0;
@@ -61,16 +58,20 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	}
 	
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
+		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 				ClipData data = ClipData.newPlainText("", "");
 				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 				view.startDrag(data, shadowBuilder, view, 0);
 				view.setVisibility(View.INVISIBLE);
+				Toast toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN" , Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
 				return true;
 			} else {
 				view.setVisibility(View.VISIBLE);
-				return false;
+				return true;
 			}
 		}
 	};
@@ -87,13 +88,13 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				// textView1.append(me.toString()+ "\n");
-				if (viewsList.contains(v)) {
+				//if (viewsList.contains(v)) {
 					Log.d("AAA", "v.dispatchTouchEvent(event)");
 					v.dispatchTouchEvent(event);
-				} else {
-					Log.d("AAA", "v.onTouchEvent(event)");
-					v.onTouchEvent(event);
-				}
+//				} else {
+//					Log.d("AAA", "v.onTouchEvent(event)");
+//					v.onTouchEvent(event);
+//				}
 				//
 			}
 		});
@@ -101,9 +102,6 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	}
 
 	class BackgroundViewsDragListener implements OnDragListener {
-		Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
-		Drawable normalShape = getResources().getDrawable(R.drawable.shape);
-
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
 			switch (event.getAction()) {
