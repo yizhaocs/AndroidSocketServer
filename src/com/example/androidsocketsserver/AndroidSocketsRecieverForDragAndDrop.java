@@ -47,14 +47,13 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
-		View rootView = findViewById(R.id.rootview);
-		viewsList = ViewTraversal.travasalViews(rootView);
+		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
 
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
 
-		findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
-		findViewById(R.id.topright).setOnDragListener(new MyDragListener());
+		findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
+		findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
@@ -80,7 +79,6 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		@Override
 		public boolean onLongClick(View view) {
 			Log.d("XYXYXY", "onLongClick");
-			
 			return false;
 		}
 	};
@@ -102,86 +100,27 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 
 	}
 
-	class MyDragListener implements OnDragListener {
+	class BackgroundViewsDragListener implements OnDragListener {
 		Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
 			switch (event.getAction()) {
-			case DragEvent.ACTION_DRAG_STARTED:
-				// do nothing
-				// v.setVisibility(View.VISIBLE);
-
-				break;
 			case DragEvent.ACTION_DROP:
 				// Dropped, reassign View to ViewGroup
 				View view = (View) event.getLocalState();
-
 				ViewGroup owner = (ViewGroup) view.getParent();
 				owner.removeView(view);
 				LinearLayout container = (LinearLayout) v;
 				container.addView(view);
-
-				v.setVisibility(View.VISIBLE);
-
 				break;
-			case DragEvent.ACTION_DRAG_ENDED:
-				// v.setVisibility(View.INVISIBLE);
-				v.setBackgroundDrawable(normalShape);
 			default:
 				break;
 			}
-
-		//	movingView = null;
-
 			return true;
 		}
 	}
-
-
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event) {
-	// //if (movingView == null) {
-	// PointerCoords outPointerCoords = new PointerCoords();
-	// event.getPointerCoords(0, outPointerCoords);
-	// movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
-	// Log.d("movingView.getId():", String.valueOf(movingView.getId()));
-	//
-	// //if (movingView.getId() == R.id.myimage1) {
-	// ClipData data = ClipData.newPlainText("", "");
-	// Log.d("movingView", String.valueOf(outPointerCoords.x));
-	// Log.d("movingView", String.valueOf(outPointerCoords.y));
-	// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
-	// movingView.startDrag(data, shadowBuilder, movingView, 0);
-	// // movingView.setVisibility(View.INVISIBLE);
-	// // } else {
-	// // movingView = null;
-	// // }
-	// //}
-	//
-	// return super.onTouchEvent(event);
-	// }
-	// private final class OverrideTouchListener implements OnTouchListener {
-	// @Override
-	// public boolean onTouch(View view, MotionEvent event) {
-	// if (event.getAction() == MotionEvent.ACTION_DOWN) {
-	//
-	// PointerCoords outPointerCoords = new PointerCoords();
-	// event.getPointerCoords(0, outPointerCoords);
-	// movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
-	// Log.d("movingView", String.valueOf(outPointerCoords.x));
-	// Log.d("movingView", String.valueOf(outPointerCoords.y));
-	// ClipData data = ClipData.newPlainText("", "");
-	// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-	// movingView.startDrag(data, shadowBuilder, view, 0);
-	// movingView.setVisibility(View.INVISIBLE);
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
-	// }
 
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
@@ -259,6 +198,8 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 						Log.d("haha", "dispatchTouchEvent");
 						// v.dispatchTouchEvent(me);
 						a.dispatchView(v, me);
+						
+						
 					}
 
 					// out.println("echo " + inputLine);
