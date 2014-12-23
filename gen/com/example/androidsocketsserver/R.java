@@ -88,10 +88,8 @@ containing a value of this type.
         public static final int target_shape=0x7f020005;
     }
     public static final class id {
-        public static final int bottomleft=0x7f06000d;
-        public static final int bottomright=0x7f06000e;
         public static final int button1=0x7f060008;
-        public static final int clientMessage=0x7f060010;
+        public static final int clientMessage=0x7f06000e;
         public static final int drop=0x7f060003;
         public static final int left=0x7f060000;
         public static final int middle=0x7f060001;
@@ -100,7 +98,7 @@ containing a value of this type.
         public static final int recieverrootview=0x7f060006;
         public static final int right=0x7f060002;
         public static final int rootview=0x7f060009;
-        public static final int senderContents=0x7f06000f;
+        public static final int senderContents=0x7f06000d;
         public static final int textView1=0x7f060007;
         public static final int thumbnail=0x7f060005;
         public static final int topleft=0x7f06000a;

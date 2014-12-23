@@ -37,7 +37,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private static final int MOVE = 1;
 	private int mode = NONE;
 	List<View> viewsList;
-	private View movingView = null;
+	//private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDrop a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 
@@ -58,8 +58,6 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 
 		findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
 		findViewById(R.id.topright).setOnDragListener(new MyDragListener());
-		findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener());
-		findViewById(R.id.bottomright).setOnDragListener(new MyDragListener());
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
@@ -70,10 +68,10 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		@Override
 		public boolean onLongClick(View v) {
 			Log.d("XYXYXY", "onLongClick");
-//			ClipData data = ClipData.newPlainText("", "");
-//			DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-//			movingView.startDrag(data, shadowBuilder, v, 0);
-//			movingView.setVisibility(View.INVISIBLE);
+			// ClipData data = ClipData.newPlainText("", "");
+			// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+			// movingView.startDrag(data, shadowBuilder, v, 0);
+			// movingView.setVisibility(View.INVISIBLE);
 			return false;
 		}
 	};
@@ -107,6 +105,18 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				// v.setVisibility(View.VISIBLE);
 
 				break;
+			case DragEvent.ACTION_DROP:
+				// Dropped, reassign View to ViewGroup
+				View view = (View) event.getLocalState();
+
+				ViewGroup owner = (ViewGroup) view.getParent();
+				owner.removeView(view);
+				LinearLayout container = (LinearLayout) v;
+				container.addView(view);
+
+				v.setVisibility(View.VISIBLE);
+
+				break;
 			case DragEvent.ACTION_DRAG_ENDED:
 				// v.setVisibility(View.INVISIBLE);
 				v.setBackgroundDrawable(normalShape);
@@ -114,7 +124,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				break;
 			}
 
-			movingView = null;
+		//	movingView = null;
 
 			return true;
 		}
@@ -133,54 +143,54 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				view.setVisibility(View.VISIBLE);
 				return true;
 			} else {
+				view.setVisibility(View.VISIBLE);
 				return false;
 			}
 		}
 	}
 
-	
-//	 @Override
-//	 public boolean onTouchEvent(MotionEvent event) {
-//	 //if (movingView == null) {
-//	 PointerCoords outPointerCoords = new PointerCoords();
-//	 event.getPointerCoords(0, outPointerCoords);
-//	 movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
-//	 Log.d("movingView.getId():", String.valueOf(movingView.getId()));
-//	
-//	 //if (movingView.getId() == R.id.myimage1) {
-//	 ClipData data = ClipData.newPlainText("", "");
-//	 Log.d("movingView", String.valueOf(outPointerCoords.x));
-//	 Log.d("movingView", String.valueOf(outPointerCoords.y));
-//	 DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
-//	 movingView.startDrag(data, shadowBuilder, movingView, 0);
-//	 // movingView.setVisibility(View.INVISIBLE);
-//	 // } else {
-//	 // movingView = null;
-//	 // }
-//	 //}
-//	
-//	 return super.onTouchEvent(event);
-//	 }
-//	private final class OverrideTouchListener implements OnTouchListener {
-//		@Override
-//		public boolean onTouch(View view, MotionEvent event) {
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//
-//				PointerCoords outPointerCoords = new PointerCoords();
-//				event.getPointerCoords(0, outPointerCoords);
-//				movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
-//				Log.d("movingView", String.valueOf(outPointerCoords.x));
-//				Log.d("movingView", String.valueOf(outPointerCoords.y));
-//				ClipData data = ClipData.newPlainText("", "");
-//				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-//				movingView.startDrag(data, shadowBuilder, view, 0);
-//				movingView.setVisibility(View.INVISIBLE);
-//				return true;
-//			} else {
-//				return false;
-//			}
-//		}
-//	}
+	// @Override
+	// public boolean onTouchEvent(MotionEvent event) {
+	// //if (movingView == null) {
+	// PointerCoords outPointerCoords = new PointerCoords();
+	// event.getPointerCoords(0, outPointerCoords);
+	// movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+	// Log.d("movingView.getId():", String.valueOf(movingView.getId()));
+	//
+	// //if (movingView.getId() == R.id.myimage1) {
+	// ClipData data = ClipData.newPlainText("", "");
+	// Log.d("movingView", String.valueOf(outPointerCoords.x));
+	// Log.d("movingView", String.valueOf(outPointerCoords.y));
+	// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(movingView);
+	// movingView.startDrag(data, shadowBuilder, movingView, 0);
+	// // movingView.setVisibility(View.INVISIBLE);
+	// // } else {
+	// // movingView = null;
+	// // }
+	// //}
+	//
+	// return super.onTouchEvent(event);
+	// }
+	// private final class OverrideTouchListener implements OnTouchListener {
+	// @Override
+	// public boolean onTouch(View view, MotionEvent event) {
+	// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+	//
+	// PointerCoords outPointerCoords = new PointerCoords();
+	// event.getPointerCoords(0, outPointerCoords);
+	// movingView = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewlist);
+	// Log.d("movingView", String.valueOf(outPointerCoords.x));
+	// Log.d("movingView", String.valueOf(outPointerCoords.y));
+	// ClipData data = ClipData.newPlainText("", "");
+	// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+	// movingView.startDrag(data, shadowBuilder, view, 0);
+	// movingView.setVisibility(View.INVISIBLE);
+	// return true;
+	// } else {
+	// return false;
+	// }
+	// }
+	// }
 
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
