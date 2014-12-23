@@ -49,11 +49,8 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		setContentView(R.layout.recieverfordraganddrop);
 		View rootView = findViewById(R.id.rootview);
 		viewsList = ViewTraversal.travasalViews(rootView);
-		for (View v : viewsList) {
-			if (v instanceof ImageView)
-				Log.d("draganddroplog", String.valueOf(v.getId()));
-		}
-		findViewById(R.id.myimage1).setOnTouchListener(new OverrideTouchListener());
+
+		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
 
 		findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
@@ -63,15 +60,27 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		mSocketsServer.execute();
 
 	}
+	
+	private OnTouchListener mOnTouchListener = new OnTouchListener() {
+		public boolean onTouch(View view, MotionEvent motionEvent) {
+			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+				ClipData data = ClipData.newPlainText("", "");
+				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+				view.startDrag(data, shadowBuilder, view, 0);
+				view.setVisibility(View.INVISIBLE);
+				return true;
+			} else {
+				view.setVisibility(View.VISIBLE);
+				return false;
+			}
+		}
+	};
 
 	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		@Override
-		public boolean onLongClick(View v) {
+		public boolean onLongClick(View view) {
 			Log.d("XYXYXY", "onLongClick");
-			// ClipData data = ClipData.newPlainText("", "");
-			// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-			// movingView.startDrag(data, shadowBuilder, v, 0);
-			// movingView.setVisibility(View.INVISIBLE);
+			
 			return false;
 		}
 	};
@@ -130,24 +139,6 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		}
 	}
 
-	private final class OverrideTouchListener implements OnTouchListener {
-		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-				ClipData data = ClipData.newPlainText("", "");
-				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-				view.startDrag(data, shadowBuilder, view, 0);
-				view.setVisibility(View.INVISIBLE);
-
-				return true;
-			} else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-				view.setVisibility(View.VISIBLE);
-				return true;
-			} else {
-				view.setVisibility(View.VISIBLE);
-				return false;
-			}
-		}
-	}
 
 	// @Override
 	// public boolean onTouchEvent(MotionEvent event) {
