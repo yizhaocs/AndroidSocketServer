@@ -196,7 +196,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 						Log.d("haha", "dispatchTouchEvent");
 						// v.dispatchTouchEvent(me);
 						a.dispatchView(v, me);
-						
+						//a.dispatchTouchEvent(me);
 						
 					}
 
