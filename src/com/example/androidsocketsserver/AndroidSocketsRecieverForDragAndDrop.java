@@ -60,19 +60,32 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+			Toast toast;
+			switch (motionEvent.getAction()) {
+			case MotionEvent.ACTION_DOWN:
 				ClipData data = ClipData.newPlainText("", "");
 				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 				view.startDrag(data, shadowBuilder, view, 0);
 				view.setVisibility(View.INVISIBLE);
-				Toast toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN" , Toast.LENGTH_SHORT);
+				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN" , Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.BOTTOM, 0, 0);
 				toast.show();
-				return true;
-			} else {
-				view.setVisibility(View.VISIBLE);
-				return true;
+				break;
+			case MotionEvent.ACTION_MOVE:
+				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_MOVE" , Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
+				break;
+			case MotionEvent.ACTION_UP:
+				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_UP" , Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.BOTTOM, 0, 0);
+				toast.show();
+				break;
+			default:
+				break;
 			}
+			view.setVisibility(View.VISIBLE);
+			return true;
 		}
 	};
 
