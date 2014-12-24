@@ -16,23 +16,23 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <!--
+        
            <activity
             android:name=".AndroidSocketsSender"
-            android:label="Sockets Sender" >
+            android:label="AndroidSockets Sender" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        -->
+        
 
 
        
        <!--  <activity
             android:name=".AndroidSocketsRecieverForButton"
-            android:label="Sockets Reciever" >
+            android:label="AndroidSocketsReciever For Button" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,15 +41,15 @@
         </activity> -->
        
  
-        <activity
+     <!--    <activity
             android:name=".AndroidSocketsRecieverForDragAndDrop"
-            android:label="Sockets Reciever" >
+            android:label="AndroidSocketsReciever For DragAndDrop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> 
+        </activity>  -->
     </application>
 
 </manifest>
