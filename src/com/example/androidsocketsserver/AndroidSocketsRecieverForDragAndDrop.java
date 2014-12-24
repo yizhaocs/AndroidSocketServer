@@ -30,9 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDrop extends Activity {
-	private static final int NONE = 0;
-	private static final int MOVE = 1;
-	private int mode = NONE;
+	private static final String LOGCAT = "AndroidSocketsRecieverForDragAndDrop_LOGCAT";
 	List<View> viewsList;
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDrop a = this;
@@ -69,12 +67,12 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 				// view.startDrag(ClipData.newPlainText("", ""), shadowBuilder, view, 0);
 				cancelToast(toast_1, toast_2, toast_3);
+				trigerDragAndDrop(view);
 				showToast(toast_1, Gravity.BOTTOM, "MotionEvent.ACTION_DOWN");
 				//
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				cancelToast(toast_1, toast_2, toast_3);
-				trigerDragAndDrop(view);
 				showToast(toast_2, Gravity.CENTER, "MotionEvent.ACTION_MOVE");
 				return true;
 			case MotionEvent.ACTION_UP:
@@ -102,6 +100,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	}
 
 	private void cancelToast(Toast toast_1, Toast toast_2, Toast toast_3) {
+
 		if (toast_1 != null) {
 			toast_1.cancel();
 		}
@@ -136,21 +135,33 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				//
 			}
 		});
-
 	}
 
 	class BackgroundViewsDragListener implements OnDragListener {
 		@Override
-		public boolean onDrag(View v, DragEvent event) {
-			switch (event.getAction()) {
+		public boolean onDrag(View layoutview, DragEvent dragEvent) {
+			View dragView = (View) dragEvent.getLocalState();
+			switch (dragEvent.getAction()) {
+			case DragEvent.ACTION_DRAG_STARTED:
+				Log.d(LOGCAT, "Drag event started");
+				break;
+			case DragEvent.ACTION_DRAG_ENTERED:
+				Log.d(LOGCAT, "Drag event entered into " + layoutview.toString());
+				break;
+			case DragEvent.ACTION_DRAG_EXITED:
+				Log.d(LOGCAT, "Drag event exited from " + layoutview.toString());
+				break;
 			case DragEvent.ACTION_DROP:
+				Log.d(LOGCAT, "Dropped");
 				// Dropped, reassign View to ViewGroup
-				View view = (View) event.getLocalState();
-				ViewGroup owner = (ViewGroup) view.getParent();
-				owner.removeView(view);
-				LinearLayout container = (LinearLayout) v;
-				container.addView(view);
-
+				ViewGroup owner = (ViewGroup) dragView.getParent();
+				owner.removeView(dragView);
+				LinearLayout container = (LinearLayout) layoutview;
+				container.addView(dragView);
+				dragView.setVisibility(View.VISIBLE);
+				break;
+			case DragEvent.ACTION_DRAG_ENDED:
+				Log.d(LOGCAT, "Drag ended");
 				break;
 			default:
 				break;
