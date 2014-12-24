@@ -59,7 +59,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		Toast toast_1;
 		Toast toast_2;
 		Toast toast_3;
-
+		
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			switch (motionEvent.getAction()) {
@@ -88,8 +88,8 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	};
 
 	private void trigerDragAndDrop(View view) {
-		DragShadowBuilder shadowBuilder2 = new View.DragShadowBuilder(view);
-		view.startDrag(null, shadowBuilder2, view, 0);
+		DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+		view.startDrag(null, shadowBuilder, view, 0);
 		view.setVisibility(View.INVISIBLE);
 	}
 
@@ -140,7 +140,6 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	class BackgroundViewsDragListener implements OnDragListener {
 		@Override
 		public boolean onDrag(View layoutview, DragEvent dragEvent) {
-			View dragView = (View) dragEvent.getLocalState();
 			switch (dragEvent.getAction()) {
 			case DragEvent.ACTION_DRAG_STARTED:
 				Log.d(LOGCAT, "Drag event started");
@@ -154,6 +153,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			case DragEvent.ACTION_DROP:
 				Log.d(LOGCAT, "Dropped");
 				// Dropped, reassign View to ViewGroup
+				View dragView = (View) dragEvent.getLocalState();
 				ViewGroup owner = (ViewGroup) dragView.getParent();
 				owner.removeView(dragView);
 				LinearLayout container = (LinearLayout) layoutview;
