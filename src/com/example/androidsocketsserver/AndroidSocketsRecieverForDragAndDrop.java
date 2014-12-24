@@ -68,46 +68,47 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			case MotionEvent.ACTION_DOWN:
 				// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
 				// view.startDrag(ClipData.newPlainText("", ""), shadowBuilder, view, 0);
-				view.setVisibility(View.INVISIBLE);
-				cancelToast(toast_1,toast_2,toast_3);
-				toast_1 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN", Toast.LENGTH_SHORT);
-				toast_1.setGravity(Gravity.BOTTOM, 0, 0);
-				toast_1.show();
+				cancelToast(toast_1, toast_2, toast_3);
+				showToast(toast_1, Gravity.BOTTOM, "MotionEvent.ACTION_DOWN");
 				//
-				break;
+				return true;
 			case MotionEvent.ACTION_MOVE:
-				cancelToast(toast_1,toast_2,toast_3);
-				DragShadowBuilder shadowBuilder2 = new View.DragShadowBuilder(view);
-				view.startDrag(null, shadowBuilder2, view, 0);
-
-				toast_2 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_MOVE", Toast.LENGTH_SHORT);
-				toast_2.setGravity(Gravity.CENTER, 0, 0);
-				toast_2.show();
-				
-				break;
+				cancelToast(toast_1, toast_2, toast_3);
+				trigerDragAndDrop(view);
+				showToast(toast_2, Gravity.CENTER, "MotionEvent.ACTION_MOVE");
+				return true;
 			case MotionEvent.ACTION_UP:
-				cancelToast(toast_1,toast_2,toast_3);
-				toast_3 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_UP", Toast.LENGTH_SHORT);
-				toast_3.setGravity(Gravity.TOP, 0, 0);
-				toast_3.show();	
-				break;
+				cancelToast(toast_1, toast_2, toast_3);
+				showToast(toast_3, Gravity.TOP, "MotionEvent.ACTION_UP");
+				view.setVisibility(View.VISIBLE);
+				return true;
 			default:
 				break;
 			}
-
-			view.setVisibility(View.VISIBLE);
-			return true;
+			return false;
 		}
 	};
-	
-	private void cancelToast(Toast toast_1,Toast toast_2,Toast toast_3){
-		if(toast_1!=null){
+
+	private void trigerDragAndDrop(View view) {
+		DragShadowBuilder shadowBuilder2 = new View.DragShadowBuilder(view);
+		view.startDrag(null, shadowBuilder2, view, 0);
+		view.setVisibility(View.INVISIBLE);
+	}
+
+	private void showToast(Toast toast, int position, String info) {
+		toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
+		toast.setGravity(position, 0, 0);
+		toast.show();
+	}
+
+	private void cancelToast(Toast toast_1, Toast toast_2, Toast toast_3) {
+		if (toast_1 != null) {
 			toast_1.cancel();
 		}
-		if(toast_2!=null){
+		if (toast_2 != null) {
 			toast_2.cancel();
 		}
-		if(toast_3!=null){
+		if (toast_3 != null) {
 			toast_3.cancel();
 		}
 	}
@@ -149,6 +150,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				owner.removeView(view);
 				LinearLayout container = (LinearLayout) v;
 				container.addView(view);
+
 				break;
 			default:
 				break;
