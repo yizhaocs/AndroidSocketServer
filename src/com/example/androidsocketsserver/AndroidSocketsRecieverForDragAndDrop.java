@@ -34,7 +34,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	private static final int MOVE = 1;
 	private int mode = NONE;
 	List<View> viewsList;
-	//private View movingView = null;
+	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDrop a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 
@@ -56,38 +56,61 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		mSocketsServer.execute();
 
 	}
-	
+
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
+		Toast toast_1;
+		Toast toast_2;
+		Toast toast_3;
+
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			Toast toast;
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				ClipData data = ClipData.newPlainText("", "");
-				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-				view.startDrag(data, shadowBuilder, view, 0);
+				// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+				// view.startDrag(ClipData.newPlainText("", ""), shadowBuilder, view, 0);
 				view.setVisibility(View.INVISIBLE);
-				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN" , Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				cancelToast(toast_1,toast_2,toast_3);
+				toast_1 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_DOWN", Toast.LENGTH_SHORT);
+				toast_1.setGravity(Gravity.BOTTOM, 0, 0);
+				toast_1.show();
+				//
 				break;
 			case MotionEvent.ACTION_MOVE:
-				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_MOVE" , Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				cancelToast(toast_1,toast_2,toast_3);
+				DragShadowBuilder shadowBuilder2 = new View.DragShadowBuilder(view);
+				view.startDrag(null, shadowBuilder2, view, 0);
+
+				toast_2 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_MOVE", Toast.LENGTH_SHORT);
+				toast_2.setGravity(Gravity.CENTER, 0, 0);
+				toast_2.show();
+				
 				break;
 			case MotionEvent.ACTION_UP:
-				toast = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_UP" , Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.BOTTOM, 0, 0);
-				toast.show();
+				cancelToast(toast_1,toast_2,toast_3);
+				toast_3 = Toast.makeText(getApplicationContext(), "MotionEvent.ACTION_UP", Toast.LENGTH_SHORT);
+				toast_3.setGravity(Gravity.TOP, 0, 0);
+				toast_3.show();	
 				break;
 			default:
 				break;
 			}
+
 			view.setVisibility(View.VISIBLE);
 			return true;
 		}
 	};
+	
+	private void cancelToast(Toast toast_1,Toast toast_2,Toast toast_3){
+		if(toast_1!=null){
+			toast_1.cancel();
+		}
+		if(toast_2!=null){
+			toast_2.cancel();
+		}
+		if(toast_3!=null){
+			toast_3.cancel();
+		}
+	}
 
 	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		@Override
@@ -102,13 +125,13 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			public void run() {
 				dispatchTouchEvent(event);
 				// textView1.append(me.toString()+ "\n");
-				//if (viewsList.contains(v)) {
-					Log.d("AAA", "v.dispatchTouchEvent(event)");
-					//v.dispatchTouchEvent(event);
-//				} else {
-//					Log.d("AAA", "v.onTouchEvent(event)");
-//					v.onTouchEvent(event);
-//				}
+				// if (viewsList.contains(v)) {
+				Log.d("AAA", "v.dispatchTouchEvent(event)");
+				// v.dispatchTouchEvent(event);
+				// } else {
+				// Log.d("AAA", "v.onTouchEvent(event)");
+				// v.onTouchEvent(event);
+				// }
 				//
 			}
 		});
@@ -203,18 +226,18 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 					Log.d("haha", me.toString());
 					Log.d("hahax", String.valueOf(outPointerCoords.x));
 					Log.d("hahay", String.valueOf(outPointerCoords.y));
-//
-//					View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
-//					// Log.d("hahaID", String.valueOf(v.getId()));
-//					if (me != null && v != null) {
-//						Log.d("haha", "dispatchTouchEvent");
-//						// v.dispatchTouchEvent(me);
-//						//a.dispatchView(v, me);
-//						//a.dispatchTouchEvent(me);
-//						
-//					}
+					//
+					// View v = ViewTraversal.getView(outPointerCoords.x, outPointerCoords.y, viewsList);
+					// // Log.d("hahaID", String.valueOf(v.getId()));
+					// if (me != null && v != null) {
+					// Log.d("haha", "dispatchTouchEvent");
+					// // v.dispatchTouchEvent(me);
+					// //a.dispatchView(v, me);
+					// //a.dispatchTouchEvent(me);
+					//
+					// }
 					a.dispatchView(null, me);
-					//a.dispatchTouchEvent(me);
+					// a.dispatchTouchEvent(me);
 					// out.println("echo " + inputLine);
 					if (inputLine.equals("Bye")) {
 						break;
