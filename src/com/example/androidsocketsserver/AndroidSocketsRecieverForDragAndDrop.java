@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,13 +77,13 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				Log.d("motionEvent", "ACTION_MOVE");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_2, Gravity.CENTER, "MotionEvent.ACTION_MOVE");
-				
+
 				return true;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_3, Gravity.TOP, "MotionEvent.ACTION_UP");
-				//view.setVisibility(View.VISIBLE);
+				// view.setVisibility(View.VISIBLE);
 				return true;
 			default:
 				break;
@@ -93,27 +94,28 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 
 	private void trigerDragAndDrop(View view) {
 		DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-		view.startDrag(null, shadowBuilder, view, 0);
+		ClipData data = ClipData.newPlainText("","");
+		view.startDrag(data, shadowBuilder, view, 0);
 		view.setVisibility(View.INVISIBLE);
 	}
 
 	private void showToast(Toast toast, int position, String info) {
-		//toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
-		//toast.setGravity(position, 0, 0);
-		//toast.show();
+		// toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
+		// toast.setGravity(position, 0, 0);
+		// toast.show();
 	}
 
 	private void cancelToast(Toast toast_1, Toast toast_2, Toast toast_3) {
 
-//		if (toast_1 != null) {
-//			toast_1.cancel();
-//		}
-//		if (toast_2 != null) {
-//			toast_2.cancel();
-//		}
-//		if (toast_3 != null) {
-//			toast_3.cancel();
-//		}
+		// if (toast_1 != null) {
+		// toast_1.cancel();
+		// }
+		// if (toast_2 != null) {
+		// toast_2.cancel();
+		// }
+		// if (toast_3 != null) {
+		// toast_3.cancel();
+		// }
 	}
 
 	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
