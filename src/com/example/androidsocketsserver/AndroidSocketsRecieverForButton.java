@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,8 +26,10 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AndroidSocketsRecieverForButton extends Activity {
+	private Boolean exit = false;
 	private TextView textView1;
 	private List<View> viewsList;
 	private Button button1;
@@ -152,6 +155,24 @@ public class AndroidSocketsRecieverForButton extends Activity {
 			updateDisplay(values[0]);
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+		if (exit) {
+			finish(); // finish activity
+		} else {
+			Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+			exit = true;
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					exit = false;
+				}
+			}, 3 * 1000);
+
+		}
+
+	}
 
 	public class MultiSocketsServerThread extends Thread {
 
@@ -215,5 +236,7 @@ public class AndroidSocketsRecieverForButton extends Activity {
 		}
 
 	}
+	
+	
 
 }

@@ -12,9 +12,9 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDrop extends Activity {
-	
+	private Boolean exit = false;
 	List<View> viewsList;
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDrop a = this;
@@ -59,7 +59,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 		Toast toast_1;
 		Toast toast_2;
 		Toast toast_3;
-		
+
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			switch (motionEvent.getAction()) {
@@ -76,6 +76,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				Log.d("motionEvent", "ACTION_MOVE");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_2, Gravity.CENTER, "MotionEvent.ACTION_MOVE");
+				
 				return true;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
@@ -97,22 +98,22 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 	}
 
 	private void showToast(Toast toast, int position, String info) {
-		toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
-		toast.setGravity(position, 0, 0);
-		toast.show();
+		//toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
+		//toast.setGravity(position, 0, 0);
+		//toast.show();
 	}
 
 	private void cancelToast(Toast toast_1, Toast toast_2, Toast toast_3) {
 
-		if (toast_1 != null) {
-			toast_1.cancel();
-		}
-		if (toast_2 != null) {
-			toast_2.cancel();
-		}
-		if (toast_3 != null) {
-			toast_3.cancel();
-		}
+//		if (toast_1 != null) {
+//			toast_1.cancel();
+//		}
+//		if (toast_2 != null) {
+//			toast_2.cancel();
+//		}
+//		if (toast_3 != null) {
+//			toast_3.cancel();
+//		}
 	}
 
 	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
@@ -171,6 +172,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			}
 			return true;
 		}
+
 	}
 
 	public class MyTask extends AsyncTask<String, String, String> {
@@ -208,6 +210,24 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 			// super.onProgressUpdate(values);
 			// updateDisplay(values[0]);
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (exit) {
+			finish(); // finish activity
+		} else {
+			Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+			exit = true;
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					exit = false;
+				}
+			}, 3 * 1000);
+
+		}
+
 	}
 
 	public class MultiSocketsServerThread extends Thread {
