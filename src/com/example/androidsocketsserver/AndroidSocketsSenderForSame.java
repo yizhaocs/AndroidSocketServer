@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDrop.BackgroundViewsDragListener;
+import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDropV1.BackgroundViewsDragListener;
 import com.example.androidsocketsserver.AndroidSocketsSenderForDifferent.MyTask;
 
 import android.annotation.SuppressLint;
