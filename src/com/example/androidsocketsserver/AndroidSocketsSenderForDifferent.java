@@ -23,7 +23,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-public class AndroidSocketsSender extends Activity {
+public class AndroidSocketsSenderForDifferent extends Activity {
 	ConvertorOfMotionEventToJsonObject mConvertorOfMotionEventToJsonObject = ConvertorOfMotionEventToJsonObject.getInstance();
 	private TextView clientMessage;
 	private MyTask mSocketsClient;
@@ -48,10 +48,10 @@ public class AndroidSocketsSender extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.sender);
+		setContentView(R.layout.senderfordifferent);
 		clientMessage = (TextView) this.findViewById(R.id.clientMessage);
 		clientMessage.setMovementMethod(new ScrollingMovementMethod());
-		tasks = new ArrayList<AndroidSocketsSender.MyTask>();
+		tasks = new ArrayList<AndroidSocketsSenderForDifferent.MyTask>();
 
 	}
 
