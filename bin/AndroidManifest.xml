@@ -25,7 +25,7 @@
             </intent-filter>
         </activity> -->
 
-        <activity
+      <!--   <activity
             android:name=".AndroidSocketsSenderForSame"
             android:label="AndroidSockets Sender" >
             <intent-filter>
@@ -33,7 +33,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity> -->
+        
+          <activity
+            android:name=".AndroidSocketsSenderForJapan"
+            android:label="AndroidSockets Sender" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        
         <!-- <activity
             android:name=".AndroidSocketsRecieverForButton"
             android:label="AndroidSocketsReciever For Button" >

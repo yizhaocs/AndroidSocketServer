@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDrop.BackgroundViewsDragListener;
+import com.example.androidsocketsserver.AndroidSocketsSenderForDifferent.MyTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -88,21 +89,21 @@ public class AndroidSocketsSenderForSame extends Activity {
 				cancelToast(toast_1, toast_2, toast_3);
 				trigerDragAndDrop(view);
 				showToast(toast_1, Gravity.BOTTOM, "MotionEvent.ACTION_DOWN");
-				sendMessage(motionEvent);
+				//sendMessage(motionEvent);
 				//
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_2, Gravity.CENTER, "MotionEvent.ACTION_MOVE");
-				sendMessage(motionEvent);
+				//sendMessage(motionEvent);
 				return true;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_3, Gravity.TOP, "MotionEvent.ACTION_UP");
 				//view.setVisibility(View.VISIBLE);
-				sendMessage(motionEvent);
+				//sendMessage(motionEvent);
 				return true;
 			default:
 				break;
@@ -204,6 +205,23 @@ public class AndroidSocketsSenderForSame extends Activity {
 			return true;
 		}
 
+	}
+	
+
+	@SuppressLint("NewApi")
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.d("onTouchEvent", event.toString());
+		// clientMessage.append(me.toString()+ "\n");
+		mSocketsClient = new MyTask();
+		// mSocketsClient.execute();
+		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+		try {
+			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
+		} catch (Exception e) {
+			Log.e("error", "Exception:" + e.getMessage());
+		}
+		return super.onTouchEvent(event);
 	}
 
 	protected void updateDisplay(String message) {
