@@ -82,7 +82,7 @@ public class AndroidSocketsRecieverForDragAndDrop extends Activity {
 				Log.d("motionEvent", "ACTION_UP");
 				cancelToast(toast_1, toast_2, toast_3);
 				showToast(toast_3, Gravity.TOP, "MotionEvent.ACTION_UP");
-				view.setVisibility(View.VISIBLE);
+				//view.setVisibility(View.VISIBLE);
 				return true;
 			default:
 				break;
