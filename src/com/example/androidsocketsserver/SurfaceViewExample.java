@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -64,8 +65,13 @@ public class SurfaceViewExample extends Activity {
 				if (!holder.getSurface().isValid()) {
 					continue;
 				}
+				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
+				// Clear the surfaceview
+				c.drawColor(Color.BLACK);
+				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
+				// Display the latest drawing to user interface
 				holder.unlockCanvasAndPost(c);
 			}
 		}

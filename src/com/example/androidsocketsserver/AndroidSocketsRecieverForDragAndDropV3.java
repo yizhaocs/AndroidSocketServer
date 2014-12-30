@@ -34,6 +34,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	private AndroidSocketsRecieverForDragAndDropV3 a = this;
 	private List<View> viewsList;
+	private Boolean isDragging = false;
 	/* For */
 	private Boolean exit = false;
 	/* For */
@@ -45,7 +46,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		/* For SurfaceView Drawing*/
+		/* For SurfaceView Drawing */
 		v = new BackgroundThreadDrawing(this);
 		v.setOnTouchListener(mOnTouchListener);
 		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
@@ -53,7 +54,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		y = 0;
 		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-		/* For Sockets*/
+		/* For Sockets */
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 	}
@@ -81,18 +82,24 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-				x = motionEvent.getX();
-				y = motionEvent.getY();
+				isDragging = true;
+				x = ball.getWidth()/2;
+				y = ball.getHeight()/2;
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				x = motionEvent.getX();
-				y = motionEvent.getY();
-				return true;
+				if (isDragging) {
+					updateCoordi(motionEvent);
+					return true;
+				} else {
+					updateCoordi(motionEvent);
+					return false;
+				}
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
-				x = motionEvent.getX();
-				y = motionEvent.getY();
+				isDragging = false;
+				x = ball.getWidth()/2;
+				y = ball.getHeight()/2;
 				return true;
 			default:
 				break;
@@ -100,6 +107,11 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			return false;
 		}
 	};
+
+	private void updateCoordi(MotionEvent motionEvent) {
+		x = motionEvent.getX();
+		y = motionEvent.getY();
+	}
 
 	protected void dispatchView(final View v, final MotionEvent event) {
 		// run the motion event on the UI thread
@@ -132,7 +144,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
 				// Clear the surfaceview
-				c.drawColor(Color.BLACK);
+				c.drawColor(Color.WHITE);
 				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
 				// Display the latest drawing to user interface
