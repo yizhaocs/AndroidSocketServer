@@ -13,16 +13,19 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.MotionEvent.PointerCoords;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
@@ -36,12 +39,13 @@ import android.widget.Toast;
 public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	private Boolean exit = false;
 	private Boolean isDragging = false;
-	
+
 	private List<View> viewsList;
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDropV2 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
-
+	Bitmap mBitmap ;
+	Canvas c;
 	/** Called when the activity is first created. */
 
 	@Override
@@ -53,8 +57,8 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
 
-		findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
-		findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
+		//findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
+		//findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
@@ -64,19 +68,22 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
+			
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
 				isDragging = true;
+				mBitmap = getBitmapFromView(view);
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
+				 c = new Canvas(mBitmap);
 				if (isDragging) {
 					float xPosition = motionEvent.getRawX();
 					float yPosition = motionEvent.getRawY();
 					view.setX(xPosition - view.getWidth());
 					view.setY(yPosition - view.getHeight());
-
+					view.requestLayout();
 					return true;
 				} else {
 					return false;
@@ -298,6 +305,25 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 			}
 		}
 
+	}
+	
+	private Bitmap getBitmapFromView(View view) {
+		// Define a bitmap with the same size as the view
+		Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+		// Bind a canvas to it
+		Canvas canvas = new Canvas(returnedBitmap);
+		// Get the view's background
+		Drawable bgDrawable = view.getBackground();
+		if (bgDrawable != null)
+			// has background drawable, then draw it on the canvas
+			bgDrawable.draw(canvas);
+		else
+			// does not have background drawable, then draw white background on the canvas
+			canvas.drawColor(Color.WHITE);
+		// draw the view on the canvas
+		view.draw(canvas);
+		// return the bitmap
+		return returnedBitmap;
 	}
 
 	private class SimpleDragShadow extends DragShadowBuilder {
