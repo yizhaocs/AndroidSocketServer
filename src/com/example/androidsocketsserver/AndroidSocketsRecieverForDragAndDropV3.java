@@ -83,12 +83,13 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			switch (motionEvent.getAction()) {
+
+			int action = motionEvent.getAction();
+			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-
 				if (x == initX && y == initY) {
-					//updateCoordi(motionEvent);
+					// updateCoordi(motionEvent);
 					isDragging = true;
 					return true;
 				}
@@ -98,7 +99,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				if (isDragging) {
 					updateCoordi(motionEvent);
 					return true;
-				} 
+				}
 				break;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
