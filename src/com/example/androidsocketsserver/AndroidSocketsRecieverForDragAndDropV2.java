@@ -45,7 +45,7 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	private AndroidSocketsRecieverForDragAndDropV2 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	Bitmap mBitmap ;
-	Canvas c;
+
 	/** Called when the activity is first created. */
 
 	@Override
@@ -77,7 +77,7 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				 c = new Canvas(mBitmap);
+				
 				if (isDragging) {
 					view.setX(motionEvent.getRawX() - view.getWidth() + view.getWidth()/2);
 					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight()/2);
