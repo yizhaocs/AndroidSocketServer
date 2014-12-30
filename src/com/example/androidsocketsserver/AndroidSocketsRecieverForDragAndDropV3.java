@@ -10,10 +10,16 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDropV2.MultiSocketsServerThread;
+import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDropV2.MyTask;
+import com.example.androidsocketsserver.SurfaceViewExample.OurView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -25,6 +31,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.MotionEvent.PointerCoords;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
@@ -36,106 +44,71 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
-	private Boolean exit = false;
-	private Boolean isDragging = false;
-	//OurView v;
-	Bitmap ball;
-	float x,y;
-	
-	private List<View> viewsList;
-	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropV3 a = this;
+	/* For */
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
-	Bitmap mBitmap ;
-
-	/** Called when the activity is first created. */
+	private AndroidSocketsRecieverForDragAndDropV3 a = this;
+	private List<View> viewsList;
+	/* For*/
+	private Boolean exit = false;
+	/* For */
+	OurView v;
+	Bitmap ball;
+	float x, y;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.recieverfordraganddrop);
+		/* For*/
+		v = new OurView(this);
+		v.setOnTouchListener(mOnTouchListener);
+		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
+		x = 0;
+		y = 0;
+		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-
-		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
-		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
-
-		//findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
-		//findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
-
+		/* For*/
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
+	}
 
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		v.pause();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		v.resume();
 	}
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			
+
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-				isDragging = true;
-				mBitmap = getBitmapFromView(view);
+				x = motionEvent.getX();
+				y = motionEvent.getY();
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				
-				if (isDragging) {
-					view.setX(motionEvent.getRawX() - view.getWidth() + view.getWidth()/2);
-					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight()/2);
-					view.requestLayout();
-					return true;
-				} else {
-					return false;
-				}
+				x = motionEvent.getX();
+				y = motionEvent.getY();
+				return true;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
-				isDragging = false;
-				ViewGroup owner = (ViewGroup) view.getParent();
-				owner.removeView(view);
-				view.setX(owner.getX());
-				view.setY(owner.getY());
-				owner.addView(view);
+				x = motionEvent.getX();
+				y = motionEvent.getY();
 				return true;
 			default:
 				break;
 			}
-			return false;
-		}
-	};
-
-	private void trigerDragAndDrop(View view) {
-		SimpleDragShadow mSimpleDragShadow = new SimpleDragShadow(view);
-		// DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-		ClipData data = ClipData.newPlainText("", "");
-		view.startDrag(data, mSimpleDragShadow, view, 0);
-		view.setVisibility(View.INVISIBLE);
-	}
-
-	private void showToast(Toast toast, int position, String info) {
-		// toast = Toast.makeText(getApplicationContext(), info, Toast.LENGTH_SHORT);
-		// toast.setGravity(position, 0, 0);
-		// toast.show();
-	}
-
-	private void cancelToast(Toast toast_1, Toast toast_2, Toast toast_3) {
-
-		// if (toast_1 != null) {
-		// toast_1.cancel();
-		// }
-		// if (toast_2 != null) {
-		// toast_2.cancel();
-		// }
-		// if (toast_3 != null) {
-		// toast_3.cancel();
-		// }
-	}
-
-	private OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View view) {
-			Log.d("onLongClick", "onLongClick");
-			// trigerDragAndDrop(view);
 			return false;
 		}
 	};
@@ -144,106 +117,53 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				dispatchTouchEvent(event);
-				// textView1.append(me.toString()+ "\n");
-				// if (viewsList.contains(v)) {
-				Log.d("AAA", "v.dispatchTouchEvent(event)");
-				// v.dispatchTouchEvent(event);
-				// } else {
-				// Log.d("AAA", "v.onTouchEvent(event)");
-				// v.onTouchEvent(event);
-				// }
-				//
 			}
 		});
 	}
 
-	class BackgroundViewsDragListener implements OnDragListener {
-		@Override
-		public boolean onDrag(View layoutview, DragEvent dragEvent) {
-			switch (dragEvent.getAction()) {
-			case DragEvent.ACTION_DRAG_STARTED:
-				Log.d("dragEvent", "Drag event started");
-				break;
-			case DragEvent.ACTION_DRAG_ENTERED:
-				Log.d("dragEvent", "Drag event entered into " + layoutview.toString());
-				break;
-			case DragEvent.ACTION_DRAG_EXITED:
-				Log.d("dragEvent", "Drag event exited from " + layoutview.toString());
-				break;
-			case DragEvent.ACTION_DROP:
-				Log.d("dragEvent", "Dropped");
-				// Dropped, reassign View to ViewGroup
-				View dragView = (View) dragEvent.getLocalState();
-				ViewGroup owner = (ViewGroup) dragView.getParent();
-				owner.removeView(dragView);
-				LinearLayout container = (LinearLayout) layoutview;
-				container.addView(dragView);
-				dragView.setVisibility(View.VISIBLE);
-				break;
-			case DragEvent.ACTION_DRAG_ENDED:
-				Log.d("dragEvent", "Drag ended");
-				break;
-			default:
-				break;
-			}
-			return true;
+	public class OurView extends SurfaceView implements Runnable {
+		Thread t = null;
+		SurfaceHolder holder;
+		boolean isItOK = false;
+
+		public OurView(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+			holder = getHolder();
 		}
 
-	}
-
-	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
-		protected void onPreExecute() {
-			// super.onPreExecute();
-			// updateDisplay("Starting task" + "\n");
-		};
-
-		@SuppressWarnings("resource")
-		protected String doInBackground(String... params) {
-			try {
-				int portNumber = 4444;
-				boolean listening = true;
-				ServerSocket serverSocket = new ServerSocket(portNumber);
-				while (listening) {
-					new MultiSocketsServerThread(serverSocket.accept(), viewsList).start();
+		public void run() {
+			while (isItOK) {
+				// perform canvas drawing
+				if (!holder.getSurface().isValid()) {
+					continue;
 				}
-			} catch (IOException e) {
-				Log.e("error", "IOException:" + e.getMessage());
+				Canvas c = holder.lockCanvas();
+				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
+				holder.unlockCanvasAndPost(c);
 			}
-			return "Task complete";
 		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			// super.onPostExecute(result);
-			// updateDisplay(result);
-		}
-
-		@Override
-		protected void onProgressUpdate(String... values) {
-			// TODO Auto-generated method stub
-			// super.onProgressUpdate(values);
-			// updateDisplay(values[0]);
-		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (exit) {
-			finish(); // finish activity
-		} else {
-			Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
-			exit = true;
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					exit = false;
+		public void pause() {
+			isItOK = false;
+			while (true) {
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-			}, 3 * 1000);
+				break;
 
+			}
+			t = null;
 		}
 
+		public void resume() {
+			isItOK = true;
+			t = new Thread(this);
+			t.start();
+		}
 	}
 
 	public class MultiSocketsServerThread extends Thread {
@@ -307,52 +227,60 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 
 	}
 	
-	private Bitmap getBitmapFromView(View view) {
-		// Define a bitmap with the same size as the view
-		Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-		// Bind a canvas to it
-		Canvas canvas = new Canvas(returnedBitmap);
-		// Get the view's background
-		Drawable bgDrawable = view.getBackground();
-		if (bgDrawable != null)
-			// has background drawable, then draw it on the canvas
-			bgDrawable.draw(canvas);
-		else
-			// does not have background drawable, then draw white background on the canvas
-			canvas.drawColor(Color.WHITE);
-		// draw the view on the canvas
-		view.draw(canvas);
-		// return the bitmap
-		return returnedBitmap;
-	}
+	public class MyTask extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			// super.onPreExecute();
+			// updateDisplay("Starting task" + "\n");
+		};
 
-	private class SimpleDragShadow extends DragShadowBuilder {
-		ColorDrawable greyBox;
-
-		public SimpleDragShadow(View view) {
-			super(view);
-			greyBox = new ColorDrawable(Color.LTGRAY);
+		@SuppressWarnings("resource")
+		protected String doInBackground(String... params) {
+			try {
+				int portNumber = 4444;
+				boolean listening = true;
+				ServerSocket serverSocket = new ServerSocket(portNumber);
+				while (listening) {
+					new MultiSocketsServerThread(serverSocket.accept(), viewsList).start();
+				}
+			} catch (IOException e) {
+				Log.e("error", "IOException:" + e.getMessage());
+			}
+			return "Task complete";
 		}
 
 		@Override
-		public void onDrawShadow(Canvas canvas) {
-			// super.onDrawShadow(canvas);
-			greyBox.draw(canvas);
-			;
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			// super.onPostExecute(result);
+			// updateDisplay(result);
 		}
 
 		@Override
-		public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
-			View v = getView();
-			int height = (int) v.getHeight() / 2;
-			int width = (int) v.getWidth() / 2;
-
-			greyBox.setBounds(0, 0, width, height);
-			shadowSize.set(width, height);
-			shadowTouchPoint.set((int) width / 2, (int) height / 2);
-
-			// super.onProvideShadowMetrics(shadowSize, shadowTouchPoint);
+		protected void onProgressUpdate(String... values) {
+			// TODO Auto-generated method stub
+			// super.onProgressUpdate(values);
+			// updateDisplay(values[0]);
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (exit) {
+			finish(); // finish activity
+		} else {
+			Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
+			exit = true;
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					exit = false;
+				}
+			}, 3 * 1000);
+
+		}
+
+	}
+
 
 }
