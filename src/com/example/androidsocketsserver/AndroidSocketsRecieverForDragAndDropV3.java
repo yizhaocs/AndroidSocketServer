@@ -10,37 +10,23 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDropV2.MultiSocketsServerThread;
-import com.example.androidsocketsserver.AndroidSocketsRecieverForDragAndDropV2.MyTask;
-import com.example.androidsocketsserver.SurfaceViewExample.OurView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.MotionEvent.PointerCoords;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.MotionEvent.PointerCoords;
 import android.view.View;
-import android.view.View.DragShadowBuilder;
-import android.view.View.OnDragListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
@@ -89,7 +75,12 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
@@ -139,8 +130,14 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				if (!holder.getSurface().isValid()) {
 					continue;
 				}
+				
+				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
+				// Clear the surfaceview
+				c.drawColor (Color.BLACK);
+				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
+				// Display the latest drawing to user interface
 				holder.unlockCanvasAndPost(c);
 			}
 		}
