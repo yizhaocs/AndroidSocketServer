@@ -35,8 +35,9 @@ import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	private Boolean exit = false;
-	Boolean isDragging = false;
-	List<View> viewsList;
+	private Boolean isDragging = false;
+	
+	private List<View> viewsList;
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDropV2 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
@@ -75,7 +76,7 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 					float yPosition = motionEvent.getRawY();
 					view.setX(xPosition - view.getWidth());
 					view.setY(yPosition - view.getHeight());
-					
+
 					return true;
 				} else {
 					return false;
@@ -83,6 +84,11 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
 				isDragging = false;
+				ViewGroup owner = (ViewGroup) view.getParent();
+				owner.removeView(view);
+				view.setX(owner.getX());
+				view.setY(owner.getY());
+				owner.addView(view);
 				return true;
 			default:
 				break;
