@@ -79,10 +79,8 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 				Log.d("motionEvent", "ACTION_MOVE");
 				 c = new Canvas(mBitmap);
 				if (isDragging) {
-					float xPosition = motionEvent.getRawX();
-					float yPosition = motionEvent.getRawY();
-					view.setX(xPosition - view.getWidth() + view.getWidth()/2);
-					view.setY(yPosition - view.getHeight() - view.getHeight()/2);
+					view.setX(motionEvent.getRawX() - view.getWidth() + view.getWidth()/2);
+					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight()/2);
 					view.requestLayout();
 					return true;
 				} else {
