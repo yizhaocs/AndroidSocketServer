@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	private Boolean exit = false;
-	Boolean isBeingDragged = false;
+	Boolean isDragging = false;
 	List<View> viewsList;
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDropV2 a = this;
@@ -61,41 +61,28 @@ public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
 	}
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
-		Toast toast_1;
-		Toast toast_2;
-		Toast toast_3;
-
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-				isBeingDragged = true;
-
+				isDragging = true;
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				if (isBeingDragged) {
+				if (isDragging) {
 					float xPosition = motionEvent.getRawX();
 					float yPosition = motionEvent.getRawY();
-
 					view.setX(xPosition - view.getWidth());
 					view.setY(yPosition - view.getHeight());
+					
 					return true;
 				} else {
 					return false;
 				}
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
-				isBeingDragged = false;
-				// cancelToast(toast_1, toast_2, toast_3);
-				// showToast(toast_3, Gravity.TOP, "MotionEvent.ACTION_UP");
-				// view.setVisibility(View.VISIBLE);
-				View dragView = view;
-				ViewGroup owner = (ViewGroup) dragView.getParent();
-				owner.removeView(dragView);
-				// LinearLayout container = (LinearLayout) view.getParent();
-				owner.addView(dragView);
+				isDragging = false;
 				return true;
 			default:
 				break;
