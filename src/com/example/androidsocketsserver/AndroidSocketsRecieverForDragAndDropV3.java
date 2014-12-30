@@ -41,6 +41,8 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	BackgroundThreadDrawing v;
 	Bitmap ball;
 	float x, y;
+	float initX;
+	float initY;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,10 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		v = new BackgroundThreadDrawing(this);
 		v.setOnTouchListener(mOnTouchListener);
 		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
-		x = 0;
-		y = 0;
+		initX = ball.getWidth() / 2;
+		initY = ball.getHeight() / 2;
+		x = initX;
+		y = initY;
 		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
 		/* For Sockets */
@@ -82,26 +86,29 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-				isDragging = true;
-				x = ball.getWidth()/2;
-				y = ball.getHeight()/2;
-				return true;
+
+				if (x == initX && y == initY) {
+					//updateCoordi(motionEvent);
+					isDragging = true;
+					return true;
+				}
+				break;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
 				if (isDragging) {
 					updateCoordi(motionEvent);
-					
 					return true;
-				} else {
-					updateCoordi(motionEvent);
-					return false;
-				}
+				} 
+				break;
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
-				isDragging = false;
-				x = ball.getWidth()/2;
-				y = ball.getHeight()/2;
-				return true;
+				if (x != initX && y != initY) {
+					isDragging = false;
+					x = initX;
+					y = initY;
+					return true;
+				}
+				break;
 			default:
 				break;
 			}
@@ -145,7 +152,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
 				// Clear the surfaceview
-				//c.drawColor(Color.TRANSPARENT);
+				// c.drawColor(Color.TRANSPARENT);
 				c.drawColor(Color.WHITE);
 				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
