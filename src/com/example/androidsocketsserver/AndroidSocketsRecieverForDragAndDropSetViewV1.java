@@ -36,13 +36,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropV2 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetViewV1 extends Activity {
 	private Boolean exit = false;
 	private Boolean isDragging = false;
 
 	private List<View> viewsList;
 	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropV2 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetViewV1 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	Bitmap mBitmap ;
 

@@ -29,10 +29,10 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetSerfaceViewV1 extends Activity {
 	/* For */
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
-	private AndroidSocketsRecieverForDragAndDropV3 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetSerfaceViewV1 a = this;
 	private List<View> viewsList;
 	private Boolean isDragging = false;
 	/* For */
