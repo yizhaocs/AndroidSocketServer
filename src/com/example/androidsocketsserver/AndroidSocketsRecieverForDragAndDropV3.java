@@ -54,8 +54,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
 		initX = ball.getWidth() / 2;
 		initY = ball.getHeight() / 2;
-		x = initX;
-		y = initY;
+		resetCoordiToDefault();
 		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
 		/* For Sockets */
@@ -105,18 +104,22 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				Log.d("motionEvent", "ACTION_UP");
 				if (x != initX && y != initY) {
 					isDragging = false;
-					x = initX;
-					y = initY;
+					resetCoordiToDefault();
 					return true;
 				}
 				break;
 			default:
 				break;
 			}
+			resetCoordiToDefault();
 			return false;
 		}
 	};
-
+	private void resetCoordiToDefault(){
+		x = initX;
+		y = initY;
+	}
+	
 	private void updateCoordi(MotionEvent motionEvent) {
 		x = motionEvent.getX();
 		y = motionEvent.getY();
