@@ -80,8 +80,18 @@
         </activity>
         -->
 
-        <activity
+       <!--  <activity
             android:name=".AndroidSocketsRecieverForDragAndDropV2"
+            android:label="AndroidSocketsReciever For DragAndDrop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> -->
+        
+         <activity
+            android:name=".AndroidSocketsRecieverForDragAndDropV3"
             android:label="AndroidSocketsReciever For DragAndDrop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
