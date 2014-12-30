@@ -90,6 +90,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				Log.d("motionEvent", "ACTION_MOVE");
 				if (isDragging) {
 					updateCoordi(motionEvent);
+					
 					return true;
 				} else {
 					updateCoordi(motionEvent);
@@ -144,6 +145,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
 				// Clear the surfaceview
+				//c.drawColor(Color.TRANSPARENT);
 				c.drawColor(Color.WHITE);
 				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
