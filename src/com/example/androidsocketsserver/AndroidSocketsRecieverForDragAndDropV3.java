@@ -34,10 +34,10 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	private AndroidSocketsRecieverForDragAndDropV3 a = this;
 	private List<View> viewsList;
-	/* For*/
+	/* For */
 	private Boolean exit = false;
 	/* For */
-	OurView v;
+	BackgroundThreadDrawing v;
 	Bitmap ball;
 	float x, y;
 
@@ -45,15 +45,15 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		/* For*/
-		v = new OurView(this);
+		/* For */
+		v = new BackgroundThreadDrawing(this);
 		v.setOnTouchListener(mOnTouchListener);
 		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
 		x = 0;
 		y = 0;
 		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-		/* For*/
+		/* For */
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 	}
@@ -112,12 +112,12 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		});
 	}
 
-	public class OurView extends SurfaceView implements Runnable {
+	public class BackgroundThreadDrawing extends SurfaceView implements Runnable {
 		Thread t = null;
 		SurfaceHolder holder;
 		boolean isItOK = false;
 
-		public OurView(Context context) {
+		public BackgroundThreadDrawing(Context context) {
 			super(context);
 			// TODO Auto-generated constructor stub
 			holder = getHolder();
@@ -130,11 +130,11 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				if (!holder.getSurface().isValid()) {
 					continue;
 				}
-				
+
 				// Lock the user interface to prepare the canvas drawing
 				Canvas c = holder.lockCanvas();
 				// Clear the surfaceview
-				c.drawColor (Color.BLACK);
+				c.drawColor(Color.BLACK);
 				// Draw the image
 				c.drawBitmap(ball, x - (ball.getWidth() / 2), y - (ball.getHeight() / 2), null);
 				// Display the latest drawing to user interface
@@ -163,12 +163,12 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		}
 	}
 
-	public class MultiSocketsServerThread extends Thread {
+	public class BackgroundThreadSockets extends Thread {
 
 		private Socket socket = null;
 		private List<View> viewsList;
 
-		public MultiSocketsServerThread(Socket socket, List<View> viewsList) {
+		public BackgroundThreadSockets(Socket socket, List<View> viewsList) {
 			super("KKMultiServerThread");
 			this.socket = socket;
 			this.viewsList = viewsList;
@@ -223,7 +223,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		}
 
 	}
-	
+
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
@@ -238,7 +238,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 				boolean listening = true;
 				ServerSocket serverSocket = new ServerSocket(portNumber);
 				while (listening) {
-					new MultiSocketsServerThread(serverSocket.accept(), viewsList).start();
+					new BackgroundThreadSockets(serverSocket.accept(), viewsList).start();
 				}
 			} catch (IOException e) {
 				Log.e("error", "IOException:" + e.getMessage());
@@ -274,10 +274,6 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 					exit = false;
 				}
 			}, 3 * 1000);
-
 		}
-
 	}
-
-
 }
