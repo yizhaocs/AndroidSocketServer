@@ -115,11 +115,12 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			return false;
 		}
 	};
-	private void resetCoordiToDefault(){
+
+	private void resetCoordiToDefault() {
 		x = initX;
 		y = initY;
 	}
-	
+
 	private void updateCoordi(MotionEvent motionEvent) {
 		x = motionEvent.getX();
 		y = motionEvent.getY();
