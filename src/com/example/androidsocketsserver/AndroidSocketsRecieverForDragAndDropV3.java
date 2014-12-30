@@ -45,7 +45,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		/* For */
+		/* For SurfaceView Drawing*/
 		v = new BackgroundThreadDrawing(this);
 		v.setOnTouchListener(mOnTouchListener);
 		ball = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_large);
@@ -53,21 +53,19 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 		y = 0;
 		setContentView(v);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-		/* For */
+		/* For Sockets*/
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 	}
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		v.pause();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		v.resume();
 	}
@@ -78,7 +76,6 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			switch (motionEvent.getAction()) {
@@ -105,6 +102,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	};
 
 	protected void dispatchView(final View v, final MotionEvent event) {
+		// run the motion event on the UI thread
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				dispatchTouchEvent(event);
@@ -227,8 +225,7 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
-			// super.onPreExecute();
-			// updateDisplay("Starting task" + "\n");
+
 		};
 
 		@SuppressWarnings("resource")
@@ -248,16 +245,12 @@ public class AndroidSocketsRecieverForDragAndDropV3 extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			// super.onPostExecute(result);
-			// updateDisplay(result);
+
 		}
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			// TODO Auto-generated method stub
-			// super.onProgressUpdate(values);
-			// updateDisplay(values[0]);
+
 		}
 	}
 
