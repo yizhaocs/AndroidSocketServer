@@ -43,7 +43,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV3 extends Activity {
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDropSetViewV3 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
-	Bitmap mBitmap ;
+	Bitmap mBitmap;
 
 	/** Called when the activity is first created. */
 
@@ -52,12 +52,14 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV3 extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-
+		for(View v:viewsList){
+			Log.d("viewsList", String.valueOf(v.getId()));
+		}
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
 
-		//findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
-		//findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
+		// findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
+		// findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
 
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
@@ -67,26 +69,23 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV3 extends Activity {
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			
+
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
 				isDragging = true;
 				mBitmap = getBitmapFromView(view);
-				ViewGroup owner = (ViewGroup) view.getParent();
-				owner.removeView(view);
-				ViewGroup owner2 = (ViewGroup) owner.getParent();
-				owner2.bringChildToFront(view);
-				owner2.addView(view);
+				ViewGroup firstOuterLayout = (ViewGroup) view.getParent();
+				firstOuterLayout.removeView(view);
+				ViewGroup secondOutLayout = (ViewGroup) firstOuterLayout.getParent();
+				secondOutLayout.addView(view);
+				secondOutLayout.bringChildToFront(view);
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				
 				if (isDragging) {
-					
-					
-					view.setX(motionEvent.getRawX() - view.getWidth()/2);
-					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight()/2);
+					view.setX(motionEvent.getRawX() - view.getWidth() / 2);
+					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight() / 2);
 					view.requestLayout();
 					return true;
 				} else {
@@ -95,12 +94,20 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV3 extends Activity {
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
 				isDragging = false;
-				ViewGroup owner3 = (ViewGroup) view.getParent();
 				
+				int location[] = new int[2];
+				view.getLocationOnScreen(location);
+				int viewX = location[0];
+				int viewY = location[1];
+				View newView = ViewTraversal.getView(viewX ,viewY,viewsList);
+				
+				ViewGroup owner3 = (ViewGroup) view.getParent();
+
 				owner3.removeView(view);
-				view.setX(owner3.getX());
-				view.setY(owner3.getY());
-				owner3.addView(view);
+				view.setX(newView.getX());
+				view.setY(newView.getY());
+				ViewGroup xx = (ViewGroup)newView;
+				xx.addView(view);
 				return true;
 			default:
 				break;
@@ -311,7 +318,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV3 extends Activity {
 		}
 
 	}
-	
+
 	private Bitmap getBitmapFromView(View view) {
 		// Define a bitmap with the same size as the view
 		Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);

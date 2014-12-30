@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 public class ViewTraversal {
 	public static List<View> travasalViews(View rootView) {
 		List<View> res = new ArrayList<View>();
-		//res.add(rootView);
+		res.add(rootView);
 		recursion(rootView, res);
 		return res;
 	}
@@ -25,7 +25,7 @@ public class ViewTraversal {
 			for (int i = 0; i < ((ViewGroup) rootView).getChildCount(); i++) {
 				View nextChild = ((ViewGroup) rootView).getChildAt(i);
 				//Log.d("views", String.valueOf(nextChild.getId()));
-				if ((nextChild instanceof LinearLayout == false && nextChild instanceof RelativeLayout == false && nextChild instanceof GridLayout == false)) 
+				//if ((nextChild instanceof LinearLayout == false && nextChild instanceof RelativeLayout == false && nextChild instanceof GridLayout == false)) 
 					res.add(nextChild);
 				
 				if (recursion(nextChild, res)) {
