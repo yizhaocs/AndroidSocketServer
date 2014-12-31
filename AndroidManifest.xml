@@ -127,8 +127,18 @@
             </intent-filter>
         </activity> -->
         
-         <activity
+         <!-- <activity
             android:name=".AndroidSocketsRecieverForDragAndDropSetViewV5"
+            android:label="AndroidSocketsReciever For DragAndDrop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> -->
+        
+        <activity
+            android:name=".AndroidSocketsRecieverForDragAndDropSetViewV6"
             android:label="AndroidSocketsReciever For DragAndDrop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
