@@ -35,13 +35,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropSetViewV6 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetViewV9 extends Activity {
 	private Boolean exit = false;
 	private Boolean isDragging = false;
 
 	private List<View> viewsList;
 	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropSetViewV6 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetViewV9 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	Bitmap mBitmap;
 
@@ -74,20 +74,16 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV6 extends Activity {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
 				isDragging = true;
-				mBitmap = getBitmapFromView(view);
 				ViewGroup firstOuterLayout = (ViewGroup) view.getParent();
-				if (firstOuterLayout.getId() == R.id.topleft || firstOuterLayout.getId() == R.id.topright) {
-					firstOuterLayout.removeView(view);
-					rootView.addView(view);
-				}
-				// rootView.bringChildToFront(view);
+				firstOuterLayout.removeView(view);
+				rootView.addView(view);
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
 				if (isDragging) {
 					view.setX(motionEvent.getRawX() - view.getWidth() / 2);
 					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight() / 2);
-					view.requestLayout();
+					//view.requestLayout();
 					return true;
 				} else {
 					return false;
