@@ -242,7 +242,9 @@
         </activity>
         -->
 
-  <!--       <activity
+
+        <!--
+             <activity
             android:name=".AndroidSocketsRecieverForDragAndDropSetViewV14"
             android:label="AndroidSocketsReciever For DragAndDrop" >
             <intent-filter>
@@ -250,10 +252,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> -->
-        
-              <activity
+        </activity>
+        -->
+
+
+        <!--
+             <activity
             android:name=".AndroidSocketsRecieverForDragAndDropSetViewV15"
+            android:label="AndroidSocketsReciever For DragAndDrop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        -->
+        
+        
+        <activity
+            android:name=".AndroidSocketsRecieverForDragAndDropSetViewV16"
             android:label="AndroidSocketsReciever For DragAndDrop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

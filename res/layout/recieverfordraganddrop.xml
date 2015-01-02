@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/topleft"
-        android:layout_width="1000dp"
+        android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@drawable/shape"
         android:orientation="vertical" >
@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:id="@+id/topright"
-        android:layout_width="1000dp"
+        android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@drawable/shape"
         android:orientation="vertical" >
