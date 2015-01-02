@@ -92,7 +92,7 @@ public class AndroidSocketsSenderForDifferent extends Activity {
 	}
 
 	public class MyTask extends AsyncTask<String, String, String> {
-		private String hostName = "10.97.1.197";
+		private String hostName = "10.97.1.176";
 		private int portNumber = 4444;
 
 		@Override

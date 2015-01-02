@@ -38,6 +38,10 @@ public class ViewTraversal {
 
 	public static View getView(float x, float y, List<View> views) {
 		for (View v : views) {
+			Log.d("wokaowokao",String.valueOf(v.getId()));
+//			if(v.getId()==2131099660){
+//				return v;
+//			}
 			if (isPointInsideView(x, y, v)) {
 				return v;
 			}
