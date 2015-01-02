@@ -35,13 +35,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetViewV11 extends Activity {
 	private Boolean exit = false;
 	private Boolean isDragging = false;
 
 	private List<View> viewsList;
 	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropSetViewV10 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetViewV11 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	Bitmap mBitmap;
 	int dragingViewID;
@@ -54,7 +54,13 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 		setContentView(R.layout.recieverfordraganddrop);
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
 		for (View v : viewsList) {
-			Log.d("viewsList", String.valueOf(v.getId()));
+			int location[] = new int[2];
+			v.getLocationOnScreen(location);
+			
+			int viewX = location[0];
+			int viewY = location[1];
+			Log.d("viewsList", "ID: " + String.valueOf(v.getId()) + ", X:" + viewX + ", Y:" + viewY);
+			
 		}
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
@@ -96,6 +102,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 
 				rootView.removeView(view);
 				View underView = ViewTraversal.getView(motionEvent.getX(), motionEvent.getY(), viewsList);
+				Log.d("movingCoor","X:" + view.getX() + ", Y:" + view.getY());
 				if (underView != null && dragingViewID!=view.getId()) {
 					view.setX(underView.getX());
 					view.setY(underView.getY());

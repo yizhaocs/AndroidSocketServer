@@ -11,12 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.ClipData;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -32,19 +34,21 @@ import android.view.View.OnDragListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetViewV12 extends Activity {
 	private Boolean exit = false;
 	private Boolean isDragging = false;
 
 	private List<View> viewsList;
 	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropSetViewV10 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetViewV12 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	Bitmap mBitmap;
 	int dragingViewID;
+	LinearLayout topright;
 
 	/** Called when the activity is first created. */
 
@@ -52,10 +56,24 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
+		LinearLayout topright = (LinearLayout) findViewById(R.id.topright);
+		// topright.getX()
+		// topright.getY()
 		viewsList = ViewTraversal.travasalViews(findViewById(R.id.rootview));
-		for (View v : viewsList) {
-			Log.d("viewsList", String.valueOf(v.getId()));
-		}
+		// for (View v : viewsList) {
+		// int location[] = new int[2];
+		// //v.getLocationOnScreen(location);
+		// @SuppressWarnings("deprecation")
+		// AbsoluteLayout.LayoutParams params = (AbsoluteLayout.LayoutParams) ()v.getLayoutParams();
+		// = 100;
+		// //params.y = 100;
+		// // int viewX = location[0];
+		// // int viewY = location[1];
+		// float viewX = params.x;
+		// float viewY = params.y;
+		// Log.d("viewsList", "ID: " + String.valueOf(v.getId()) + ", X:" + viewX + ", Y:" + viewY);
+		//
+		// }
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
 		findViewById(R.id.myimage1).setOnLongClickListener(mOnLongClickListener);
 
@@ -65,6 +83,20 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 		MyTask mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 
+	}
+
+	private int getRelativeLeft(View myView) {
+		if (myView.getParent() == myView.getRootView())
+			return myView.getLeft();
+		else
+			return myView.getLeft() + getRelativeLeft((View) myView.getParent());
+	}
+
+	private int getRelativeTop(View myView) {
+		if (myView.getParent() == myView.getRootView())
+			return myView.getTop();
+		else
+			return myView.getTop() + getRelativeTop((View) myView.getParent());
 	}
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
@@ -85,7 +117,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 				if (isDragging) {
 					view.setX(motionEvent.getRawX() - view.getWidth() / 2);
 					view.setY(motionEvent.getRawY() - view.getHeight() - view.getHeight() / 2);
-					//view.requestLayout();
+					// view.requestLayout();
 					return true;
 				} else {
 					return false;
@@ -95,19 +127,50 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 				isDragging = false;
 
 				rootView.removeView(view);
-				View underView = ViewTraversal.getView(motionEvent.getX(), motionEvent.getY(), viewsList);
-				if (underView != null && dragingViewID!=view.getId()) {
+				//View underView = ViewTraversal.getView(motionEvent.getX(), motionEvent.getY(), viewsList);
+				View underView = findView((int) motionEvent.getX(), (int) motionEvent.getY(), rootView);
+				
+				LinearLayout underLayout = (LinearLayout)underView;
+				if (underLayout != null) {
 					view.setX(underView.getX());
 					view.setY(underView.getY());
-					LinearLayout underViewViewGroup = (LinearLayout) underView;
-					underViewViewGroup.addView(view);
-				} 
-//				else {
-//					//rootView.removeView(view);
-//					rootView.addView(view);
-//					view.setX(rootView.getX());
-//					view.setY(rootView.getY());
-//				}
+					ImageView iv = new ImageView(a);
+					iv.setBackgroundResource(R.drawable.ic_launcher_large);
+					
+					iv.setX(underView.getX());
+					iv.setY(underView.getY());
+					iv.setId(view.getId());
+					//LayoutParams params=new LayoutParams(-2, -2);
+//					params.width=-2;
+//					params.height=-2;
+					
+					iv.setLayoutParams(new LayoutParams(-2, -2));
+					
+					
+					underLayout.addView(iv);
+					findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
+//					underLayout.bringChildToFront(view);
+//					view.requestLayout();
+//					underLayout.requestLayout();
+					Log.d("underLayout", String.valueOf(underLayout.getId()));
+				}else{
+					Log.d("underLayout", "underLayout is null");
+				}
+				
+				
+				// if (underView != null && dragingViewID != view.getId()) {
+				// view.setX(underView.getX());
+				// view.setY(underView.getY());
+				// LinearLayout underViewViewGroup = (LinearLayout) underView;
+				// underViewViewGroup.addView(view);
+				// }
+
+				// else {
+				// //rootView.removeView(view);
+				// rootView.addView(view);
+				// view.setX(rootView.getX());
+				// view.setY(rootView.getY());
+				// }
 				return true;
 			default:
 				break;
@@ -115,6 +178,23 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 			return false;
 		}
 	};
+
+	
+	private View findView(int x, int y, ViewGroup rootView) {
+		for (int _numChildren = 0; _numChildren < rootView.getChildCount(); --_numChildren) {
+			View _child = rootView.getChildAt(_numChildren);
+			Rect _bounds = new Rect();
+			_child.getHitRect(_bounds);
+			Log.d("findLayout", "_child.getId():" + String.valueOf(_child.getId()));
+			Log.d("findLayout", String.valueOf(rootView.getChildCount()));
+			if (_bounds.contains(x, y) && _child.getId()!=dragingViewID) {
+				Log.d("findLayout", "return _child.getId():" + String.valueOf(_child.getId()));
+				return _child;
+			}
+			// In View = true!!!
+		}
+		return null;
+	}
 
 	private void trigerDragAndDrop(View view) {
 		SimpleDragShadow mSimpleDragShadow = new SimpleDragShadow(view);
@@ -182,6 +262,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV10 extends Activity {
 				LinearLayout container = (LinearLayout) layoutview;
 				container.addView(dragView);
 				dragView.setVisibility(View.VISIBLE);
+
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
 				Log.d("dragEvent", "Drag ended");
