@@ -33,7 +33,7 @@ public class AndroidSocketsRecieverForWebView extends Activity {
 	private Button button1;
 	private AndroidSocketsRecieverForWebView a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
-
+	static MyTask mSocketsServer;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,7 +56,8 @@ public class AndroidSocketsRecieverForWebView extends Activity {
 			}
 		});
 
-		MyTask mSocketsServer = new MyTask();
+		mSocketsServer = new MyTask();
+		
 		mSocketsServer.execute();
 
 	}
@@ -144,6 +145,7 @@ public class AndroidSocketsRecieverForWebView extends Activity {
 			// TODO Auto-generated method stub
 			// super.onPostExecute(result);
 			updateDisplay(result);
+			mSocketsServer.cancel(true);
 		}
 
 		@Override

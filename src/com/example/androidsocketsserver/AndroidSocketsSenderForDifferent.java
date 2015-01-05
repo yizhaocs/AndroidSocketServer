@@ -49,6 +49,7 @@ public class AndroidSocketsSenderForDifferent extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.senderfordifferent);
+		
 		clientMessage = (TextView) this.findViewById(R.id.clientMessage);
 		clientMessage.setMovementMethod(new ScrollingMovementMethod());
 		tasks = new ArrayList<AndroidSocketsSenderForDifferent.MyTask>();
@@ -69,30 +70,31 @@ public class AndroidSocketsSenderForDifferent extends Activity {
 		// mSocketsClient.execute();
 		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
 		try {
-			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
+			
+			mSocketsClient.executeOnExecutor(THREAD_POOL_EXECUTOR, MotionEventManager.encodeMotionEventToJSON(event).toString());
 		} catch (Exception e) {
 			Log.e("error", "Exception:" + e.getMessage());
 		}
 		return super.onTouchEvent(event);
 	}
 
-	@SuppressLint("NewApi")
-	@Override
-	public boolean onGenericMotionEvent(MotionEvent event) {
-		updateDisplay("3");
-		mSocketsClient = new MyTask();
-		// mSocketsClient.execute();
-		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
-		try {
-			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
-		} catch (Exception e) {
-			Log.e("error", "Exception:" + e.getMessage());
-		}
-		return super.onGenericMotionEvent(event);
-	}
+//	@SuppressLint("NewApi")
+//	@Override
+//	public boolean onGenericMotionEvent(MotionEvent event) {
+//		updateDisplay("3");
+//		mSocketsClient = new MyTask();
+//		// mSocketsClient.execute();
+//		// mSocketsClient.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, ConvertorOfMotionEventToJsonObject.motionEventToJsonObject(me).toString());
+//		try {
+//			mSocketsClient.executeOnExecutor(new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory), MotionEventManager.encodeMotionEventToJSON(event).toString());
+//		} catch (Exception e) {
+//			Log.e("error", "Exception:" + e.getMessage());
+//		}
+//		return super.onGenericMotionEvent(event);
+//	}
 
 	public class MyTask extends AsyncTask<String, String, String> {
-		private String hostName = "10.97.1.176";
+		private String hostName = "10.97.1.100";
 		private int portNumber = 4444;
 
 		@Override
@@ -125,7 +127,8 @@ public class AndroidSocketsSenderForDifferent extends Activity {
 			// TODO Auto-generated method stub
 			// super.onPostExecute(result);
 			updateDisplay(result);
-			mSocketsClient.cancel(true);
+			//mSocketsClient.cancel(true);
+			
 		}
 
 		@Override
