@@ -5,37 +5,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
-import android.content.ClipData;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.MotionEvent.PointerCoords;
 import android.view.View;
-import android.view.View.DragShadowBuilder;
-import android.view.View.OnDragListener;
-import android.view.View.OnLongClickListener;
+import android.view.MotionEvent.PointerCoords;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
+public class AndroidSocketsRecieverForDragAndDropSetViewV17 extends Activity {
 	private Boolean exit = false;
-	List<View> viewsList;
+
 	// private View movingView = null;
-	private AndroidSocketsRecieverForDragAndDropV1 a = this;
+	private AndroidSocketsRecieverForDragAndDropSetViewV17 context = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
+	MyTask mSocketsServer;
+
+	int dragingViewID;
+	private Boolean isDragging = false;
 
 	/** Called when the activity is first created. */
 
@@ -44,10 +44,7 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
-		findViewById(R.id.topleft).setOnDragListener(new BackgroundViewsDragListener());
-		findViewById(R.id.topright).setOnDragListener(new BackgroundViewsDragListener());
-
-		MyTask mSocketsServer = new MyTask();
+		mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 
 	}
@@ -55,19 +52,41 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		@SuppressLint("ClickableViewAccessibility")
 		public boolean onTouch(View view, MotionEvent motionEvent) {
+			ViewGroup rootView = (ViewGroup) findViewById(R.id.rootview);
+			int x = (int) (motionEvent.getRawX() - view.getWidth() / 2);
+			int y = (int) (motionEvent.getRawY() - view.getHeight() - view.getHeight() / 2);
 			switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d("motionEvent", "ACTION_DOWN");
-				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-				ClipData data = ClipData.newPlainText("","");
-				view.startDrag(data, shadowBuilder, view, 0);
-				view.setVisibility(View.INVISIBLE);
+				isDragging = true;
+				dragingViewID = view.getId();
+				ViewGroup firstOuterLayout = (ViewGroup) view.getParent();
+				firstOuterLayout.removeView(view);
+				rootView.addView(view);
 				return true;
 			case MotionEvent.ACTION_MOVE:
 				Log.d("motionEvent", "ACTION_MOVE");
-				return true;
+				if (isDragging) {
+					view.setX(x);
+					view.setY(y);
+					return true;
+				} else {
+					return false;
+				}
 			case MotionEvent.ACTION_UP:
 				Log.d("motionEvent", "ACTION_UP");
+				isDragging = false;
+				rootView.removeView(view);
+				View underView = findView(x, y, rootView);
+				LinearLayout underLayout = (LinearLayout) underView;
+				if (underLayout != null) {
+					ImageView iv = new ImageView(context);
+					iv.setBackgroundResource(R.drawable.ic_launcher_large);
+					iv.setId(view.getId());
+					iv.setLayoutParams(new LayoutParams(-2, -2));
+					underLayout.addView(iv);
+					findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
+				}
 				return true;
 			default:
 				break;
@@ -76,40 +95,20 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 		}
 	};
 
-	class BackgroundViewsDragListener implements OnDragListener {
-		@Override
-		public boolean onDrag(View layoutview, DragEvent dragEvent) {
-			switch (dragEvent.getAction()) {
-			case DragEvent.ACTION_DRAG_STARTED:
-				Log.d("dragEvent", "Drag event started");
-				break;
-			case DragEvent.ACTION_DRAG_ENTERED:
-				Log.d("dragEvent", "Drag event entered into " + layoutview.toString());
-				break;
-			case DragEvent.ACTION_DRAG_EXITED:
-				Log.d("dragEvent", "Drag event exited from " + layoutview.toString());
-				break;
-			case DragEvent.ACTION_DROP:
-				Log.d("dragEvent", "Dropped");
-				// Dropped, reassign View to ViewGroup
-				View dragView = (View) dragEvent.getLocalState();
-				ViewGroup owner = (ViewGroup) dragView.getParent();
-				owner.removeView(dragView);
-				LinearLayout container = (LinearLayout) layoutview;
-				container.addView(dragView);
-				dragView.setVisibility(View.VISIBLE);
-				break;
-			case DragEvent.ACTION_DRAG_ENDED:
-				Log.d("dragEvent", "Drag ended");
-				break;
-			default:
-				break;
+	/* Reference: http://stackoverflow.com/questions/10959400/how-to-find-element-in-view-by-coordinates-x-y-android */
+	private View findView(int x, int y, ViewGroup rootView) {
+		for (int _numChildren = 0; _numChildren < rootView.getChildCount(); _numChildren++) {
+			View _child = rootView.getChildAt(_numChildren);
+			Rect _bounds = new Rect();
+			_child.getHitRect(_bounds);
+			if (_bounds.contains(x, y)) {
+				return _child;
 			}
-			return true;
 		}
+		return null;
 	}
-	
-	protected void dispatchView(final View v, final MotionEvent event) {
+
+	protected void dispatchView(final MotionEvent event) {
 		this.runOnUiThread(new Runnable() {
 			public void run() {
 				dispatchTouchEvent(event);
@@ -117,11 +116,10 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 		});
 	}
 
-
 	public class MyTask extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
-			// super.onPreExecute();
+
 		};
 
 		@SuppressWarnings("resource")
@@ -141,14 +139,12 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			// super.onPostExecute(result);
+
 		}
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			// TODO Auto-generated method stub
-			// super.onProgressUpdate(values);
+
 		}
 	}
 
@@ -170,7 +166,7 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 
 	public class MultiSocketsServerThread extends Thread {
 		private Socket socket = null;
-		
+
 		public MultiSocketsServerThread(Socket socket) {
 			super("KKMultiServerThread");
 			this.socket = socket;
@@ -179,20 +175,12 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 		@SuppressLint("NewApi")
 		public void run() {
 			try {
-				// PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
 				String inputLine;
-
-				// out.println("connection is setup between server and client");
-
 				while ((inputLine = in.readLine()) != null) {
 					JSONObject jo = new JSONObject(inputLine);
-					Log.d("whatf", jo.toString());
 					MotionEvent me = mConvertorOfJsonObjectToMotionEvent.createMotionEvent(jo);
-					PointerCoords outPointerCoords = new PointerCoords();
-					me.getPointerCoords(0, outPointerCoords);
-					a.dispatchView(null, me);
+					context.dispatchView(me);
 					if (inputLine.equals("Bye")) {
 						break;
 					}
@@ -200,12 +188,10 @@ public class AndroidSocketsRecieverForDragAndDropV1 extends Activity {
 				socket.close();
 			} catch (IOException e) {
 				Log.e("error", "IOException:" + e.getMessage());
-
 			} catch (JSONException e) {
 				Log.e("error", "JSONException:" + e.getMessage());
 
 			}
 		}
-
 	}
 }

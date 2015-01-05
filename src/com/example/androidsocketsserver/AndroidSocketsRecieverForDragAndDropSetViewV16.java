@@ -35,6 +35,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV16 extends Activity {
 	// private View movingView = null;
 	private AndroidSocketsRecieverForDragAndDropSetViewV16 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
+
 	int dragingViewID;
 	 MyTask mSocketsServer;
 	/** Called when the activity is first created. */
