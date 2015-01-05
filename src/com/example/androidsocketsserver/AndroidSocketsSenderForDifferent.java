@@ -26,7 +26,7 @@ import android.widget.TextView;
 public class AndroidSocketsSenderForDifferent extends Activity {
 	ConvertorOfMotionEventToJsonObject mConvertorOfMotionEventToJsonObject = ConvertorOfMotionEventToJsonObject.getInstance();
 	private TextView clientMessage;
-	private MyTask mSocketsClient;
+	private static MyTask mSocketsClient;
 	private List<MyTask> tasks;
 	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 	// private static final int CORE_POOL_SIZE = CPU_COUNT + 1;

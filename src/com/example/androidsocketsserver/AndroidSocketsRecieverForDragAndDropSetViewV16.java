@@ -36,7 +36,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV16 extends Activity {
 	private AndroidSocketsRecieverForDragAndDropSetViewV16 a = this;
 	ConvertorOfJsonObjectToMotionEvent mConvertorOfJsonObjectToMotionEvent = ConvertorOfJsonObjectToMotionEvent.getInstance();
 	int dragingViewID;
-
+	 MyTask mSocketsServer;
 	/** Called when the activity is first created. */
 
 	@Override
@@ -44,7 +44,7 @@ public class AndroidSocketsRecieverForDragAndDropSetViewV16 extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recieverfordraganddrop);
 		findViewById(R.id.myimage1).setOnTouchListener(mOnTouchListener);
-		MyTask mSocketsServer = new MyTask();
+		mSocketsServer = new MyTask();
 		mSocketsServer.execute();
 
 	}
